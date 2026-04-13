@@ -25,10 +25,6 @@ export const Canvas = memo(function Canvas() {
     : "none";
   const transformCSS = `perspective(${transform3d.perspective}px) rotateX(${transform3d.rotateX}deg) rotateY(${transform3d.rotateY}deg) scale(${transform3d.scale})`;
 
-  // For "none" device — raw image with padding
-  const imgMaxW = "800px";
-  const imgMaxH = "600px";
-
   return (
     <div className="flex items-center justify-center p-8 w-full h-full">
       <div
@@ -66,8 +62,8 @@ export const Canvas = memo(function Canvas() {
             draggable={false}
             className="block object-contain"
             style={{
-              maxWidth: imgMaxW,
-              maxHeight: imgMaxH,
+              maxWidth: "min(800px, 70vw)",
+              maxHeight: "min(600px, 60vh)",
               borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
             }}
           />

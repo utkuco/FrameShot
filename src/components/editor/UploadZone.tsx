@@ -52,11 +52,11 @@ export function UploadZone() {
       onDrop={handleDrop}
       onPaste={handlePaste}
       onDragOver={(e) => e.preventDefault()}
-      className="flex flex-col items-center justify-center gap-6 p-12"
+      className="flex flex-col items-center justify-center gap-6 p-12 w-full h-full min-h-[500px]"
     >
       <div
         onClick={() => inputRef.current?.click()}
-        className="w-80 h-64 border-2 border-dashed border-[var(--border-color)] rounded-2xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-[var(--accent)] hover:bg-[var(--accent)]/5 transition-all group"
+        className="w-full max-w-lg aspect-[4/3] border-2 border-dashed border-[var(--border-color)] rounded-2xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-[var(--accent)] hover:bg-[var(--accent)]/5 transition-all group"
       >
         <div className="w-16 h-16 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors">
           <Upload className="w-8 h-8 text-[var(--text-secondary)] group-hover:text-[var(--accent)] transition-colors" />

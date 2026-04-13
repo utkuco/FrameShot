@@ -1,9 +1,10 @@
 "use client";
 
 import { useEditorStore } from "@/lib/store";
-import { Download, RotateCcw, ImageIcon, Frame } from "lucide-react";
+import { Download, RotateCcw, Frame, ArrowLeft } from "lucide-react";
 import { useCallback } from "react";
 import { exportToPNG } from "@/lib/export-utils";
+import Link from "next/link";
 
 export function Header() {
   const imageUrl = useEditorStore((s) => s.imageUrl);
@@ -34,8 +35,11 @@ export function Header() {
   }, []);
 
   return (
-    <header className="h-14 border-b border-[var(--border-color)] bg-[var(--bg-secondary)] flex items-center justify-between px-5 flex-shrink-0">
-      <div className="flex items-center gap-2.5">
+    <header className="h-14 border-b border-[var(--border-color)] bg-[var(--bg-secondary)]/90 backdrop-blur-md flex items-center justify-between px-5 flex-shrink-0">
+      <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+          <ArrowLeft className="w-4 h-4" />
+        </Link>
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
           <Frame className="w-4 h-4 text-white" />
         </div>
