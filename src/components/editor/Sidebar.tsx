@@ -8,26 +8,26 @@ import { useState } from "react";
 
 export function Sidebar() {
   return (
-    <div className="flex flex-col">
-      <div className="px-5 py-4 border-b border-[var(--border-color)]">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Ayarlar</h2>
+    <div className="flex flex-col text-sm">
+      <div className="px-4 py-3 border-b border-[var(--border-color)]">
+        <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">Settings</h2>
       </div>
       <div className="flex flex-col divide-y divide-[var(--border-color)]">
-        <Section icon={<Palette className="w-4 h-4" />} title="Arka Plan">
+        <Section icon={<Palette className="w-3.5 h-3.5" />} title="Background">
           <GradientPicker />
           <PatternPicker />
         </Section>
-        <Section icon={<Monitor className="w-4 h-4" />} title="Cihaz Çerçevesi">
+        <Section icon={<Monitor className="w-3.5 h-3.5" />} title="Device Frame">
           <DevicePicker />
         </Section>
-        <Section icon={<Layers className="w-4 h-4" />} title="Boşluk & Köşe">
+        <Section icon={<Layers className="w-3.5 h-3.5" />} title="Padding & Radius">
           <PaddingControls />
           <RadiusControl />
         </Section>
-        <Section icon={<Box className="w-4 h-4" />} title="Gölge">
+        <Section icon={<Box className="w-3.5 h-3.5" />} title="Shadow">
           <ShadowControls />
         </Section>
-        <Section icon={<Sparkles className="w-4 h-4" />} title="3D Dönüşüm">
+        <Section icon={<Sparkles className="w-3.5 h-3.5" />} title="3D Transform">
           <TransformControls />
         </Section>
       </div>
@@ -41,13 +41,13 @@ function Section({ icon, title, children }: { icon: React.ReactNode; title: stri
     <div className="px-4 py-3">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full text-sm font-semibold text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors py-1"
+        className="flex items-center justify-between w-full text-xs font-semibold text-[var(--text-primary)] hover:text-[var(--accent)] transition-colors py-0.5"
       >
         <span className="flex items-center gap-2">
           <span className="text-[var(--accent)]">{icon}</span>
           {title}
         </span>
-        {open ? <ChevronUp className="w-3.5 h-3.5 text-[var(--text-secondary)]" /> : <ChevronDown className="w-3.5 h-3.5 text-[var(--text-secondary)]" />}
+        {open ? <ChevronUp className="w-3 h-3 text-[var(--text-tertiary)]" /> : <ChevronDown className="w-3 h-3 text-[var(--text-tertiary)]" />}
       </button>
       {open && <div className="mt-3 space-y-4">{children}</div>}
     </div>
@@ -59,8 +59,8 @@ function GradientPicker() {
   const setGradient = useEditorStore((s) => s.setGradient);
   return (
     <div>
-      <label className="text-xs font-medium text-[var(--text-secondary)] mb-2.5 block">Gradyan</label>
-      <div className="grid grid-cols-6 gap-2">
+      <label className="text-[11px] font-medium text-[var(--text-tertiary)] mb-2 block">Gradient</label>
+      <div className="grid grid-cols-6 gap-1.5">
         {presetGradients.map((g, i) => {
           const css = `linear-gradient(to right, ${g.colors.join(", ")})`;
           const isSelected = gradient.colors.join() === g.colors.join();
@@ -68,29 +68,29 @@ function GradientPicker() {
             <button
               key={i}
               onClick={() => setGradient(g)}
-              className={`w-10 h-10 rounded-xl border-2 transition-all hover:scale-110 shadow-sm ${isSelected ? "border-white ring-2 ring-[var(--accent)] scale-110" : "border-transparent hover:border-white/30"}`}
+              className={`w-full aspect-square rounded-lg border-2 transition-all hover:scale-105 ${isSelected ? "border-white ring-1 ring-[var(--accent)] scale-105" : "border-transparent hover:border-white/20"}`}
               style={{ background: css }}
             />
           );
         })}
       </div>
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-2 mt-3">
         <div className="flex-1">
-          <label className="text-[11px] font-medium text-[var(--text-secondary)] mb-1 block">Renk 1</label>
+          <label className="text-[10px] font-medium text-[var(--text-tertiary)] mb-1 block">Color 1</label>
           <input
             type="color"
             value={gradient.colors[0]}
             onChange={(e) => setGradient({ ...gradient, colors: [e.target.value, ...gradient.colors.slice(1)] })}
-            className="w-full h-9 rounded-lg border border-[var(--border-color)] bg-transparent cursor-pointer"
+            className="w-full h-8 rounded-lg border border-[var(--border-color)] bg-transparent cursor-pointer"
           />
         </div>
         <div className="flex-1">
-          <label className="text-[11px] font-medium text-[var(--text-secondary)] mb-1 block">Renk 2</label>
+          <label className="text-[10px] font-medium text-[var(--text-tertiary)] mb-1 block">Color 2</label>
           <input
             type="color"
             value={gradient.colors[1]}
             onChange={(e) => setGradient({ ...gradient, colors: [gradient.colors[0], e.target.value] })}
-            className="w-full h-9 rounded-lg border border-[var(--border-color)] bg-transparent cursor-pointer"
+            className="w-full h-8 rounded-lg border border-[var(--border-color)] bg-transparent cursor-pointer"
           />
         </div>
       </div>
@@ -103,19 +103,19 @@ function PatternPicker() {
   const setPattern = useEditorStore((s) => s.setPattern);
   return (
     <div>
-      <label className="text-xs font-medium text-[var(--text-secondary)] mb-2 block">Desen</label>
-      <div className="flex gap-2">
+      <label className="text-[11px] font-medium text-[var(--text-tertiary)] mb-2 block">Pattern</label>
+      <div className="flex gap-1.5">
         {(["none", "dots", "grid", "diagonal"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setPattern({ ...pattern, type: t })}
-            className={`flex-1 px-3 py-2 text-xs font-medium rounded-lg border transition-all ${
+            className={`flex-1 px-2 py-1.5 text-[11px] font-medium rounded-lg border transition-all ${
               pattern.type === t
-                ? "border-[var(--accent)] bg-[var(--accent)]/15 text-[var(--accent)] shadow-sm"
-                : "border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent)]/50 hover:bg-[var(--bg-tertiary)]"
+                ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]"
+                : "border-[var(--border-color)] text-[var(--text-tertiary)] hover:border-[var(--border-hover)] hover:text-[var(--text-secondary)]"
             }`}
           >
-            {t === "none" ? "Yok" : t === "dots" ? "●" : t === "grid" ? "▦" : "╲"}
+            {t === "none" ? "None" : t === "dots" ? "●" : t === "grid" ? "▦" : "╲"}
           </button>
         ))}
       </div>
@@ -128,11 +128,11 @@ function DevicePicker() {
   const setDevice = useEditorStore((s) => s.setDevice);
 
   const categoryConfig: Record<string, { icon: React.ReactNode; label: string }> = {
-    "Genel": { icon: <Monitor className="w-3.5 h-3.5" />, label: "Genel" },
-    "Telefon": { icon: <Smartphone className="w-3.5 h-3.5" />, label: "Telefon" },
-    "Tablet": { icon: <Tablet className="w-3.5 h-3.5" />, label: "Tablet" },
-    "Dizüstü": { icon: <Laptop className="w-3.5 h-3.5" />, label: "Dizüstü" },
-    "Tarayıcı": { icon: <Globe className="w-3.5 h-3.5" />, label: "Tarayıcı" },
+    "Genel": { icon: <Monitor className="w-3 h-3" />, label: "General" },
+    "Telefon": { icon: <Smartphone className="w-3 h-3" />, label: "Phone" },
+    "Tablet": { icon: <Tablet className="w-3 h-3" />, label: "Tablet" },
+    "Dizüstü": { icon: <Laptop className="w-3 h-3" />, label: "Laptop" },
+    "Tarayıcı": { icon: <Globe className="w-3 h-3" />, label: "Browser" },
   };
   const categories = ["Genel", "Telefon", "Tablet", "Dizüstü", "Tarayıcı"];
 
@@ -144,19 +144,19 @@ function DevicePicker() {
         const config = categoryConfig[cat];
         return (
           <div key={cat}>
-            <p className="text-[11px] font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <p className="text-[10px] font-medium text-[var(--text-tertiary)] uppercase tracking-wider mb-1.5 flex items-center gap-1">
               {config?.icon}
               {config?.label || cat}
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {items.map((d) => (
                 <button
                   key={d.type}
                   onClick={() => setDevice(d.type as DeviceType)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                  className={`px-2.5 py-1 text-[11px] font-medium rounded-lg border transition-all ${
                     device === d.type
-                      ? "border-[var(--accent)] bg-[var(--accent)]/15 text-[var(--accent)] shadow-sm"
-                      : "border-[var(--border-color)] text-[var(--text-secondary)] hover:border-[var(--accent)]/50 hover:bg-[var(--bg-tertiary)]"
+                      ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]"
+                      : "border-[var(--border-color)] text-[var(--text-tertiary)] hover:border-[var(--border-hover)] hover:text-[var(--text-secondary)]"
                   }`}
                 >
                   {d.name}
@@ -175,16 +175,16 @@ function PaddingControls() {
   const setPadding = useEditorStore((s) => s.setPadding);
   const update = (key: keyof PaddingConfig, val: number) => setPadding({ ...padding, [key]: val });
 
-  const labels: Record<string, string> = { top: "Üst", right: "Sağ", bottom: "Alt", left: "Sol" };
+  const labels: Record<string, string> = { top: "Top", right: "Right", bottom: "Bottom", left: "Left" };
 
   return (
     <div>
-      <label className="text-xs font-medium text-[var(--text-secondary)] mb-2 block">Boşluk (Padding)</label>
-      <div className="grid grid-cols-2 gap-3">
+      <label className="text-[11px] font-medium text-[var(--text-tertiary)] mb-2 block">Padding</label>
+      <div className="grid grid-cols-2 gap-2">
         {(["top", "right", "bottom", "left"] as const).map((dir) => (
           <div key={dir} className="space-y-1">
             <div className="flex items-center justify-between">
-              <label className="text-[11px] font-medium text-[var(--text-secondary)]">{labels[dir]}</label>
+              <label className="text-[10px] font-medium text-[var(--text-tertiary)]">{labels[dir]}</label>
               <span className="text-[10px] text-[var(--accent)] font-mono">{padding[dir]}px</span>
             </div>
             <input
@@ -193,7 +193,7 @@ function PaddingControls() {
               max={200}
               value={padding[dir]}
               onChange={(e) => update(dir, Number(e.target.value))}
-              className="w-full accent-[var(--accent)]"
+              className="w-full"
             />
           </div>
         ))}
@@ -208,7 +208,7 @@ function RadiusControl() {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <label className="text-xs font-medium text-[var(--text-secondary)]">Köşe Yuvarlama</label>
+        <label className="text-[11px] font-medium text-[var(--text-tertiary)]">Border Radius</label>
         <span className="text-[10px] text-[var(--accent)] font-mono">{borderRadius}px</span>
       </div>
       <input
@@ -217,7 +217,7 @@ function RadiusControl() {
         max={64}
         value={borderRadius}
         onChange={(e) => setBorderRadius(Number(e.target.value))}
-        className="w-full accent-[var(--accent)]"
+        className="w-full"
       />
     </div>
   );
@@ -228,9 +228,9 @@ function ShadowControls() {
   const setShadow = useEditorStore((s) => s.setShadow);
   return (
     <div className="space-y-3">
-      <label className="flex items-center gap-2.5 text-xs font-medium text-[var(--text-secondary)] cursor-pointer">
-        <div className={`relative w-8 h-4 rounded-full transition-colors ${shadow.enabled ? "bg-[var(--accent)]" : "bg-gray-600"}`}>
-          <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${shadow.enabled ? "left-4.5" : "left-0.5"}`} />
+      <label className="flex items-center gap-2 text-[11px] font-medium text-[var(--text-secondary)] cursor-pointer">
+        <div className={`relative w-7 h-3.5 rounded-full transition-colors ${shadow.enabled ? "bg-[var(--accent)]" : "bg-[var(--border-color)]"}`}>
+          <div className={`absolute top-0.5 w-2.5 h-2.5 rounded-full bg-white transition-transform ${shadow.enabled ? "left-3.5" : "left-0.5"}`} />
         </div>
         <input
           type="checkbox"
@@ -238,13 +238,13 @@ function ShadowControls() {
           onChange={(e) => setShadow({ ...shadow, enabled: e.target.checked })}
           className="sr-only"
         />
-        Gölge Aktif
+        Shadow Enabled
       </label>
       {shadow.enabled && (
-        <div className="space-y-2 pl-1">
+        <div className="space-y-2">
           <SliderControl label="X" value={shadow.x} min={-50} max={50} onChange={(v) => setShadow({ ...shadow, x: v })} />
           <SliderControl label="Y" value={shadow.y} min={-50} max={100} onChange={(v) => setShadow({ ...shadow, y: v })} />
-          <SliderControl label="Bulanıklık" value={shadow.blur} min={0} max={200} onChange={(v) => setShadow({ ...shadow, blur: v })} />
+          <SliderControl label="Blur" value={shadow.blur} min={0} max={200} onChange={(v) => setShadow({ ...shadow, blur: v })} />
         </div>
       )}
     </div>
@@ -255,16 +255,16 @@ function TransformControls() {
   const t3d = useEditorStore((s) => s.transform3d);
   const setTransform3D = useEditorStore((s) => s.setTransform3D);
   return (
-    <div className="space-y-3">
-      <SliderControl label="X Ekseni" value={t3d.rotateX} min={-45} max={45} onChange={(v) => setTransform3D({ ...t3d, rotateX: v })} />
-      <SliderControl label="Y Ekseni" value={t3d.rotateY} min={-45} max={45} onChange={(v) => setTransform3D({ ...t3d, rotateY: v })} />
-      <SliderControl label="Perspektif" value={t3d.perspective} min={200} max={2000} onChange={(v) => setTransform3D({ ...t3d, perspective: v })} />
-      <SliderControl label="Ölçek" value={t3d.scale * 100} min={50} max={150} onChange={(v) => setTransform3D({ ...t3d, scale: v / 100 })} suffix="%" />
+    <div className="space-y-2">
+      <SliderControl label="Rotate X" value={t3d.rotateX} min={-45} max={45} onChange={(v) => setTransform3D({ ...t3d, rotateX: v })} />
+      <SliderControl label="Rotate Y" value={t3d.rotateY} min={-45} max={45} onChange={(v) => setTransform3D({ ...t3d, rotateY: v })} />
+      <SliderControl label="Perspective" value={t3d.perspective} min={200} max={2000} onChange={(v) => setTransform3D({ ...t3d, perspective: v })} />
+      <SliderControl label="Scale" value={t3d.scale * 100} min={50} max={150} onChange={(v) => setTransform3D({ ...t3d, scale: v / 100 })} suffix="%" />
       <button
         onClick={() => setTransform3D({ rotateX: 0, rotateY: 0, rotateZ: 0, perspective: 1000, scale: 1 })}
-        className="w-full text-xs font-medium py-2 rounded-lg border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-all"
+        className="w-full text-[11px] font-medium py-1.5 rounded-lg border border-[var(--border-color)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] transition-all"
       >
-        Sıfırla
+        Reset
       </button>
     </div>
   );
@@ -275,8 +275,8 @@ function SliderControl({ label, value, min, max, onChange, suffix = "px" }: {
 }) {
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
-        <label className="text-[11px] font-medium text-[var(--text-secondary)]">{label}</label>
+      <div className="flex items-center justify-between mb-0.5">
+        <label className="text-[10px] font-medium text-[var(--text-tertiary)]">{label}</label>
         <span className="text-[10px] text-[var(--accent)] font-mono tabular-nums">{value}{suffix}</span>
       </div>
       <input
@@ -285,7 +285,7 @@ function SliderControl({ label, value, min, max, onChange, suffix = "px" }: {
         max={max}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-[var(--accent)]"
+        className="w-full"
       />
     </div>
   );

@@ -18,10 +18,10 @@ export function Editor() {
         {/* Sidebar */}
         <aside
           className={`border-r border-[var(--border-color)] bg-[var(--bg-secondary)] overflow-y-auto flex-shrink-0 transition-all duration-300 ease-in-out ${
-            sidebarOpen ? "w-80" : "w-0"
+            sidebarOpen ? "w-72" : "w-0"
           }`}
         >
-          <div className={`w-80 ${sidebarOpen ? "opacity-100" : "opacity-0"} transition-opacity duration-200`}>
+          <div className={`w-72 ${sidebarOpen ? "opacity-100" : "opacity-0"} transition-opacity duration-200`}>
             <Sidebar />
           </div>
         </aside>
@@ -29,8 +29,8 @@ export function Editor() {
         {/* Sidebar toggle */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute top-3 left-3 z-10 p-2 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-color)] hover:bg-[var(--accent)]/20 hover:border-[var(--accent)]/50 transition-all text-[var(--text-secondary)] hover:text-[var(--accent)]"
-          style={{ left: sidebarOpen ? "308px" : "12px" }}
+          className="absolute top-3 left-3 z-10 p-1.5 rounded-lg bg-[var(--bg-tertiary)] border border-[var(--border-color)] hover:bg-[var(--accent-soft)] hover:border-[var(--accent)] transition-all text-[var(--text-secondary)] hover:text-[var(--accent)]"
+          style={{ left: sidebarOpen ? "290px" : "12px" }}
         >
           {sidebarOpen ? (
             <PanelLeftClose className="w-4 h-4" />
