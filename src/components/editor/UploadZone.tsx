@@ -52,21 +52,21 @@ export function UploadZone() {
       onDrop={handleDrop}
       onPaste={handlePaste}
       onDragOver={(e) => e.preventDefault()}
-      className="flex flex-col items-center justify-center gap-6 p-8 w-full h-full min-h-[400px]"
+      className="flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-8 w-full h-full min-h-[300px]"
     >
       <div
         onClick={() => inputRef.current?.click()}
-        className="w-full max-w-md aspect-[4/3] border-2 border-dashed border-[var(--border-color)] rounded-2xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-[var(--accent)] hover:bg-[var(--accent-soft)] transition-all group"
+        className="w-full max-w-xs sm:max-w-md aspect-[4/3] border-2 border-dashed border-[var(--border-color)] rounded-xl sm:rounded-2xl flex flex-col items-center justify-center gap-3 sm:gap-4 cursor-pointer hover:border-[var(--accent)] hover:bg-[var(--accent)]/5 transition-all group"
       >
-        <div className="w-14 h-14 rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors">
-          <Upload className="w-6 h-6 text-[var(--text-tertiary)] group-hover:text-[var(--accent)] transition-colors" />
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-[var(--bg-tertiary)] flex items-center justify-center group-hover:bg-[var(--accent)]/20 transition-colors">
+          <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--text-tertiary)] group-hover:text-[var(--accent)] transition-colors" />
         </div>
-        <div className="text-center">
-          <p className="text-sm font-medium text-[var(--text-secondary)]">
-            Drag & Drop or <span className="text-[var(--accent)]">Click</span>
+        <div className="text-center px-4">
+          <p className="text-xs sm:text-sm font-medium text-[var(--text-secondary)]">
+            Sürükle & Bırak veya <span className="text-[var(--accent)]">Tıkla</span>
           </p>
-          <p className="text-xs text-[var(--text-tertiary)] mt-1">
-            PNG, JPG, WebP · Ctrl+V supported
+          <p className="text-[10px] sm:text-xs text-[var(--text-tertiary)] mt-1">
+            PNG, JPG, WebP · Ctrl+V
           </p>
         </div>
       </div>
@@ -84,10 +84,10 @@ export function UploadZone() {
 
       <button
         onClick={() => inputRef.current?.click()}
-        className="flex items-center gap-2 px-5 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-medium transition-colors"
+        className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition-colors"
       >
         <ImagePlus className="w-4 h-4" />
-        Upload Image
+        Görsel Yükle
       </button>
     </div>
   );

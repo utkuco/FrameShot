@@ -13,10 +13,10 @@ export default function Home() {
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border-color)] bg-[var(--bg-primary)]/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <img src="/logo-icon.svg" alt="FrameShot" className="w-8 h-8" />
-            <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-[#6366f1] to-[#a78bfa] bg-clip-text text-transparent">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo-icon.svg" alt="FrameShot" className="w-7 h-7 sm:w-8 sm:h-8" />
+            <span className="text-base sm:text-lg font-bold tracking-tight bg-gradient-to-r from-[#6366f1] to-[#a78bfa] bg-clip-text text-transparent">
               FrameShot
             </span>
           </Link>
@@ -27,7 +27,7 @@ export default function Home() {
           </nav>
           <Link
             href="/editor"
-            className="px-5 py-2 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-medium text-sm transition-colors"
+            className="px-4 sm:px-5 py-2 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-medium text-sm transition-colors"
           >
             Open Editor
           </Link>
@@ -35,26 +35,26 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="pt-32 pb-24 px-6">
+      <section className="pt-24 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-xs font-medium text-[var(--text-secondary)] mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-color)] bg-[var(--bg-card)] text-[10px] sm:text-xs font-medium text-[var(--text-secondary)] mb-6 sm:mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             100% Free · No Signup · Browser-Based
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
             Beautify Your Screenshots
             <br />
             <span className="bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a78bfa] bg-clip-text text-transparent">
               in Seconds
             </span>
           </h1>
-          <p className="text-base sm:text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-10 leading-relaxed">
+          <p className="text-sm sm:text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2">
             Add device mockups, gradient backgrounds, shadows, and 3D effects to your screenshots. Perfect for social media, presentations, and blogs.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link
               href="/editor"
-              className="px-8 py-3.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold transition-colors text-base"
+              className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold transition-colors text-sm sm:text-base"
             >
               Start Beautifying →
             </Link>
@@ -63,41 +63,26 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-6" id="how-it-works">
+      <section className="py-12 sm:py-20 px-4 sm:px-6" id="how-it-works">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">How It Works</h2>
-            <p className="text-[var(--text-secondary)] max-w-md mx-auto">Three simple steps to transform any screenshot.</p>
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">How It Works</h2>
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] max-w-md mx-auto">Three simple steps to transform any screenshot.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             {[
-              {
-                step: "01",
-                title: "Upload",
-                desc: "Drag & drop, click, or paste from clipboard. PNG, JPG, WebP supported.",
-                icon: "📸",
-              },
-              {
-                step: "02",
-                title: "Customize",
-                desc: "Pick gradients, device frames, shadows, padding, and 3D transforms.",
-                icon: "🎨",
-              },
-              {
-                step: "03",
-                title: "Export",
-                desc: "Download as high-res 2x PNG. Ready for social media, docs, or presentations.",
-                icon: "✨",
-              },
+              { step: "01", title: "Upload", desc: "Drag & drop, click, or paste from clipboard. PNG, JPG, WebP supported.", icon: "📸" },
+              { step: "02", title: "Customize", desc: "Pick gradients, device frames, shadows, padding, and 3D transforms.", icon: "🎨" },
+              { step: "03", title: "Export", desc: "Download as high-res 2x PNG. Ready for social media, docs, or presentations.", icon: "✨" },
             ].map((item) => (
               <div
                 key={item.step}
-                className="p-6 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-colors text-center"
+                className="p-5 sm:p-6 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-colors text-center"
               >
-                <span className="text-3xl mb-3 block">{item.icon}</span>
-                <div className="text-xs font-mono text-[var(--text-tertiary)] mb-2">{item.step}</div>
-                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                <span className="text-2xl sm:text-3xl mb-2 sm:mb-3 block">{item.icon}</span>
+                <div className="text-[10px] sm:text-xs font-mono text-[var(--text-tertiary)] mb-1.5 sm:mb-2">{item.step}</div>
+                <h3 className="text-base sm:text-lg font-bold mb-1.5 sm:mb-2">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -107,17 +92,17 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-20 px-6" id="features">
+      <section className="py-12 sm:py-20 px-4 sm:px-6" id="features">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">Features</h2>
-            <p className="text-[var(--text-secondary)] max-w-md mx-auto">Everything you need, nothing you don't.</p>
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Features</h2>
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] max-w-md mx-auto">Everything you need, nothing you don&apos;t.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {[
               { title: "Device Mockups", desc: "iPhone 15, Pixel 8, iPad, MacBook, Chrome, Safari, Firefox frames.", tag: "Mockups" },
-              { title: "Gradient Backgrounds", desc: "12 presets + custom colors. Linear, radial, diagonal.", tag: "Backgrounds" },
-              { title: "Pattern Overlays", desc: "Dots, grid, diagonal patterns with adjustable opacity.", tag: "Patterns" },
+              { title: "Gradients", desc: "12 presets + custom colors. Linear, radial, diagonal.", tag: "Backgrounds" },
+              { title: "Patterns", desc: "Dots, grid, diagonal with adjustable opacity.", tag: "Patterns" },
               { title: "Drop Shadows", desc: "Full control: X/Y offset, blur, spread, color.", tag: "Effects" },
               { title: "3D Transforms", desc: "Perspective rotation with adjustable scale.", tag: "Effects" },
               { title: "High-Res Export", desc: "2x PNG export, crisp on Retina displays.", tag: "Export" },
@@ -127,13 +112,13 @@ export default function Home() {
             ].map((f) => (
               <div
                 key={f.title}
-                className="p-5 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-colors"
+                className="p-3.5 sm:p-5 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-colors"
               >
-                <span className="inline-block px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--accent-soft)] text-[var(--accent)] mb-3">
+                <span className="inline-block px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[11px] font-semibold bg-[var(--accent-soft)] text-[var(--accent)] mb-2 sm:mb-3">
                   {f.tag}
                 </span>
-                <h3 className="text-sm font-bold mb-1.5">{f.title}</h3>
-                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                <h3 className="text-xs sm:text-sm font-bold mb-1 sm:mb-1.5">{f.title}</h3>
+                <p className="text-[10px] sm:text-xs text-[var(--text-secondary)] leading-relaxed">
                   {f.desc}
                 </p>
               </div>
@@ -143,13 +128,13 @@ export default function Home() {
       </section>
 
       {/* Use Cases */}
-      <section className="py-20 px-6 border-t border-[var(--border-color)]" id="use-cases">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 border-t border-[var(--border-color)]" id="use-cases">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">Where to Use</h2>
-            <p className="text-[var(--text-secondary)] max-w-md mx-auto">From app launches to technical blogs.</p>
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Where to Use</h2>
+            <p className="text-sm sm:text-base text-[var(--text-secondary)] max-w-md mx-auto">From app launches to technical blogs.</p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
             {[
               { title: "Product Hunt", emoji: "🏆" },
               { title: "Social Media", emoji: "📱" },
@@ -162,10 +147,10 @@ export default function Home() {
             ].map((u) => (
               <div
                 key={u.title}
-                className="p-5 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-colors text-center"
+                className="p-3 sm:p-5 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--border-hover)] transition-colors text-center"
               >
-                <span className="text-2xl block mb-2">{u.emoji}</span>
-                <span className="text-sm font-medium">{u.title}</span>
+                <span className="text-xl sm:text-2xl block mb-1.5 sm:mb-2">{u.emoji}</span>
+                <span className="text-[11px] sm:text-sm font-medium">{u.title}</span>
               </div>
             ))}
           </div>
@@ -173,12 +158,12 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 px-6" id="faq">
+      <section className="py-12 sm:py-20 px-4 sm:px-6" id="faq">
         <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">FAQ</h2>
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">FAQ</h2>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2.5 sm:space-y-3">
             {[
               { q: "Is FrameShot free?", a: "Yes, 100% free. No premium tiers, no usage limits, no hidden costs." },
               { q: "Do I need an account?", a: "No signup required. Just open the editor and start." },
@@ -191,13 +176,13 @@ export default function Home() {
                 key={faq.q}
                 className="group rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)]"
               >
-                <summary className="p-5 font-medium text-sm list-none flex items-center justify-between cursor-pointer">
+                <summary className="p-4 sm:p-5 font-medium text-xs sm:text-sm list-none flex items-center justify-between cursor-pointer">
                   {faq.q}
-                  <span className="text-[var(--text-tertiary)] group-open:rotate-45 transition-transform text-lg leading-none">
+                  <span className="text-[var(--text-tertiary)] group-open:rotate-45 transition-transform text-base sm:text-lg leading-none flex-shrink-0 ml-2">
                     +
                   </span>
                 </summary>
-                <p className="px-5 pb-5 text-sm text-[var(--text-secondary)] leading-relaxed">
+                <p className="px-4 sm:px-5 pb-4 sm:pb-5 text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
                   {faq.a}
                 </p>
               </details>
@@ -207,17 +192,17 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-6 border-t border-[var(--border-color)]">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 border-t border-[var(--border-color)]">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+          <h2 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-4">
             Ready to Beautify?
           </h2>
-          <p className="text-[var(--text-secondary)] mb-8">
+          <p className="text-sm sm:text-base text-[var(--text-secondary)] mb-6 sm:mb-8">
             Free, fast, and private. No signup needed.
           </p>
           <Link
             href="/editor"
-            className="inline-flex px-8 py-3.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold transition-colors"
+            className="inline-flex px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold transition-colors text-sm sm:text-base"
           >
             Open FrameShot Editor
           </Link>
@@ -225,20 +210,20 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border-color)] py-8 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-[var(--border-color)] py-6 sm:py-8 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
-            <img src="/logo-icon.svg" alt="FrameShot" className="w-6 h-6" />
-            <span className="text-sm font-semibold bg-gradient-to-r from-[#6366f1] to-[#a78bfa] bg-clip-text text-transparent">
+            <img src="/logo-icon.svg" alt="FrameShot" className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-[#6366f1] to-[#a78bfa] bg-clip-text text-transparent">
               FrameShot
             </span>
           </div>
-          <nav className="flex items-center gap-6 text-xs text-[var(--text-tertiary)]">
+          <nav className="flex items-center gap-5 sm:gap-6 text-[10px] sm:text-xs text-[var(--text-tertiary)]">
             <a href="/editor" className="hover:text-[var(--text-secondary)]">Editor</a>
             <a href="#features" className="hover:text-[var(--text-secondary)]">Features</a>
             <a href="#faq" className="hover:text-[var(--text-secondary)]">FAQ</a>
           </nav>
-          <p className="text-xs text-[var(--text-tertiary)]">
+          <p className="text-[10px] sm:text-xs text-[var(--text-tertiary)]">
             © {new Date().getFullYear()} FrameShot
           </p>
         </div>

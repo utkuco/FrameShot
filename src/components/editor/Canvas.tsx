@@ -14,11 +14,7 @@ export const Canvas = memo(function Canvas() {
   const device = useEditorStore((s) => s.device);
   const pattern = useEditorStore((s) => s.pattern);
 
-  const gradientCSS =
-    backgroundGradient.direction === "radial"
-      ? `radial-gradient(circle, ${backgroundGradient.colors.join(", ")})`
-      : `linear-gradient(${backgroundGradient.direction.replace("to-", "to ")}, ${backgroundGradient.colors.join(", ")})`;
-
+  const gradientCSS = buildGradientCSS(backgroundGradient);
   const patternCSS = getPatternCSS(pattern.type, pattern.color, pattern.scale, pattern.opacity);
   const shadowCSS = shadow.enabled
     ? `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${shadow.color}`
@@ -26,7 +22,7 @@ export const Canvas = memo(function Canvas() {
   const transformCSS = `perspective(${transform3d.perspective}px) rotateX(${transform3d.rotateX}deg) rotateY(${transform3d.rotateY}deg) scale(${transform3d.scale})`;
 
   return (
-    <div className="flex items-center justify-center p-8 w-full h-full">
+    <div className="flex items-center justify-center p-4 sm:p-8 w-full h-full">
       <div
         id="preview-canvas"
         style={{
@@ -38,7 +34,7 @@ export const Canvas = memo(function Canvas() {
           transform: transformCSS,
           transition: "transform 0.3s ease",
         }}
-        className="relative inline-flex items-center justify-center"
+        className="relative inline-flex items-center justify-center max-w-full"
       >
         {device !== "none" ? (
           <DeviceFrame device={device}>
@@ -46,13 +42,7 @@ export const Canvas = memo(function Canvas() {
               src={imageUrl!}
               alt="Screenshot"
               draggable={false}
-              className="block"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "top left",
-              }}
+              className="block w-full h-full object-cover"
             />
           </DeviceFrame>
         ) : (
@@ -62,7 +52,7 @@ export const Canvas = memo(function Canvas() {
             draggable={false}
             className="block object-contain"
             style={{
-              maxWidth: "min(800px, 70vw)",
+              maxWidth: "min(800px, 65vw)",
               maxHeight: "min(600px, 60vh)",
               borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
             }}
@@ -72,6 +62,18 @@ export const Canvas = memo(function Canvas() {
     </div>
   );
 });
+
+function buildGradientCSS(config: { colors: string[]; direction: string }): string {
+  const { colors, direction } = config;
+  switch (direction) {
+    case "radial":
+      return `radial-gradient(circle, ${colors.join(", ")})`;
+    case "conic":
+      return `conic-gradient(from 0deg, ${colors.join(", ")})`;
+    default:
+      return `linear-gradient(${direction.replace("to-", "to ")}, ${colors.join(", ")})`;
+  }
+}
 
 function getPatternCSS(type: string, color: string, scale: number, opacity: number): string {
   const s = scale * 20;
