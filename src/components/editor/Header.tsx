@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/lib/store";
-import { Download, RotateCcw, ImageIcon } from "lucide-react";
+import { Download, RotateCcw, ImageIcon, Frame } from "lucide-react";
 import { useCallback } from "react";
 import { exportToPNG } from "@/lib/export-utils";
 
@@ -34,36 +34,42 @@ export function Header() {
   }, []);
 
   return (
-    <header className="h-14 border-b border-[var(--border-color)] bg-[var(--bg-secondary)] flex items-center justify-between px-4 flex-shrink-0">
-      <div className="flex items-center gap-3">
-        <ImageIcon className="w-6 h-6 text-[var(--accent)]" />
-        <h1 className="text-lg font-bold tracking-tight">Screenshot Beautifier</h1>
+    <header className="h-14 border-b border-[var(--border-color)] bg-[var(--bg-secondary)] flex items-center justify-between px-5 flex-shrink-0">
+      <div className="flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+          <Frame className="w-4 h-4 text-white" />
+        </div>
+        <h1 className="text-lg font-bold tracking-tight bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+          FrameShot
+        </h1>
       </div>
 
-      {imageUrl && (
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => clearImage()}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-tertiary)] transition-colors"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Yeni Görsel
-          </button>
-          <button
-            onClick={handleExport}
-            className="flex items-center gap-1.5 px-4 py-1.5 text-sm rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-medium transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            İndir (PNG)
-          </button>
-          <button
-            onClick={reset}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg border border-[var(--border-color)] hover:bg-red-500/20 text-red-400 transition-colors"
-          >
-            Sıfırla
-          </button>
-        </div>
-      )}
+      <div className="flex items-center gap-2">
+        {imageUrl && (
+          <>
+            <button
+              onClick={() => clearImage()}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm rounded-lg border border-[var(--border-color)] hover:bg-[var(--bg-tertiary)] transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Yeni Görsel
+            </button>
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1.5 px-4 py-1.5 text-sm rounded-lg bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-medium transition-all shadow-lg shadow-violet-500/25"
+            >
+              <Download className="w-3.5 h-3.5" />
+              İndir (PNG)
+            </button>
+            <button
+              onClick={reset}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg border border-[var(--border-color)] hover:bg-red-500/20 text-red-400 transition-colors"
+            >
+              Sıfırla
+            </button>
+          </>
+        )}
+      </div>
     </header>
   );
 }

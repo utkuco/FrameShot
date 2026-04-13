@@ -25,8 +25,16 @@ export const Canvas = memo(function Canvas() {
     : "none";
   const transformCSS = `perspective(${transform3d.perspective}px) rotateX(${transform3d.rotateX}deg) rotateY(${transform3d.rotateY}deg) scale(${transform3d.scale})`;
 
+  // Determine image size constraints based on device
+  const isPhone = device.startsWith("iphone") || device === "pixel-8" || device === "samsung-s24";
+  const isTablet = device === "ipad-pro" || device === "android-tablet";
+  const isBrowser = device.startsWith("browser");
+
+  const imgMaxW = isPhone ? "280px" : isTablet ? "500px" : isBrowser ? "800px" : "800px";
+  const imgMaxH = isPhone ? "560px" : isTablet ? "650px" : isBrowser ? "500px" : "600px";
+
   return (
-    <div className="flex items-center justify-center p-8">
+    <div className="flex items-center justify-center p-8 w-full h-full">
       <div
         id="preview-canvas"
         style={{
@@ -42,10 +50,31 @@ export const Canvas = memo(function Canvas() {
       >
         {device !== "none" ? (
           <DeviceFrame device={device}>
-            <img src={imageUrl!} alt="Screenshot" className="block max-w-full max-h-full object-contain" style={{ borderRadius: "4px" }} draggable={false} />
+            <img
+              src={imageUrl!}
+              alt="Screenshot"
+              className="block object-contain"
+              style={{
+                maxWidth: imgMaxW,
+                maxHeight: imgMaxH,
+                borderRadius: "4px",
+                width: "100%",
+              }}
+              draggable={false}
+            />
           </DeviceFrame>
         ) : (
-          <img src={imageUrl!} alt="Screenshot" className="block max-w-[800px] max-h-[600px] object-contain" style={{ borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px` }} draggable={false} />
+          <img
+            src={imageUrl!}
+            alt="Screenshot"
+            className="block object-contain"
+            style={{
+              maxWidth: "800px",
+              maxHeight: "600px",
+              borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
+            }}
+            draggable={false}
+          />
         )}
       </div>
     </div>
@@ -66,4 +95,3 @@ function getPatternCSS(type: string, color: string, scale: number, opacity: numb
       return "";
   }
 }
-
