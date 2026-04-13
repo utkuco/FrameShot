@@ -25,13 +25,9 @@ export const Canvas = memo(function Canvas() {
     : "none";
   const transformCSS = `perspective(${transform3d.perspective}px) rotateX(${transform3d.rotateX}deg) rotateY(${transform3d.rotateY}deg) scale(${transform3d.scale})`;
 
-  // Determine image size constraints based on device
-  const isPhone = device.startsWith("iphone") || device === "pixel-8" || device === "samsung-s24";
-  const isTablet = device === "ipad-pro" || device === "android-tablet";
-  const isBrowser = device.startsWith("browser");
-
-  const imgMaxW = isPhone ? "280px" : isTablet ? "500px" : isBrowser ? "800px" : "800px";
-  const imgMaxH = isPhone ? "560px" : isTablet ? "650px" : isBrowser ? "500px" : "600px";
+  // For "none" device — raw image with padding
+  const imgMaxW = "800px";
+  const imgMaxH = "600px";
 
   return (
     <div className="flex items-center justify-center p-8 w-full h-full">
@@ -53,27 +49,27 @@ export const Canvas = memo(function Canvas() {
             <img
               src={imageUrl!}
               alt="Screenshot"
-              className="block object-contain"
-              style={{
-                maxWidth: imgMaxW,
-                maxHeight: imgMaxH,
-                borderRadius: "4px",
-                width: "100%",
-              }}
               draggable={false}
+              className="block"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "top left",
+              }}
             />
           </DeviceFrame>
         ) : (
           <img
             src={imageUrl!}
             alt="Screenshot"
+            draggable={false}
             className="block object-contain"
             style={{
-              maxWidth: "800px",
-              maxHeight: "600px",
+              maxWidth: imgMaxW,
+              maxHeight: imgMaxH,
               borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
             }}
-            draggable={false}
           />
         )}
       </div>
