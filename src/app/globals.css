@@ -21,7 +21,6 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: system-ui, -apple-system, sans-serif;
-  overflow: hidden;
 }
 
 /* Scrollbar */
