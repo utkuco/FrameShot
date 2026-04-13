@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FrameShot
+
+Beautiful screenshot mockups — instantly. Wrap your screenshots in device frames, gradient backgrounds, and 3D transforms.
+
+**Live Demo:** [frameshot.vercel.app](https://frameshot.vercel.app)
+
+## Features
+
+- 📱 **Device Frames** — iPhone 15 with Dynamic Island, more coming soon
+- 🎨 **Gradient Backgrounds** — Handpicked presets or custom colors
+- 🔄 **3D Transforms** — Rotate & perspective controls
+- 🖼️ **Padding & Radius** — Full control over spacing
+- 💾 **PNG Export** — High-quality export with Canvas API
+- 📋 **Paste Support** — Ctrl+V to paste from clipboard
+- ⚡ **Zero Backend** — Everything runs in the browser, no uploads
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org) + React 19
+- [Tailwind CSS 4](https://tailwindcss.com)
+- [Zustand](https://zustand.docs.pmnd.rs) for state management
+- Canvas 2D API for export
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone https://github.com/utkuco/FrameShot.git
+cd FrameShot
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Upload a screenshot (drag & drop, click, or Ctrl+V)
+2. Choose a gradient background
+3. Adjust padding, border radius, shadow, and 3D transform
+4. Click **Download PNG** to export
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
+MIT
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Made with ❤️ by [Utku Özer Coşkun](https://github.com/utkuco)
