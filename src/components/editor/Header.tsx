@@ -1,49 +1,25 @@
 "use client";
 
 import { useEditorStore } from "@/lib/store";
-import { Download, RotateCcw, Frame, ArrowLeft, Menu, Moon, Sun } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { Download, RotateCcw, Frame, ArrowLeft, Menu } from "lucide-react";
+import { useCallback } from "react";
 import { exportToPNG } from "@/lib/export-utils";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
   onToggleSidebar: () => void;
   sidebarOpen: boolean;
 }
 
-export function Header({ onToggleSidebar }: HeaderProps) {
+export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
   const imageUrl = useEditorStore((s) => s.imageUrl);
   const reset = useEditorStore((s) => s.reset);
   const clearImage = useEditorStore((s) => s.clearImage);
 
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("frameshot-theme");
-    if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      document.documentElement.classList.add("dark");
-      setIsDark(true);
-    }
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("frameshot-theme", next ? "dark" : "light");
-  }, [isDark]);
-
   const handleExport = useCallback(async () => {
     const state = useEditorStore.getState();
     if (!state.imageUrl) return;
-
     try {
       await exportToPNG({
         imageUrl: state.imageUrl,
@@ -64,103 +40,61 @@ export function Header({ onToggleSidebar }: HeaderProps) {
   }, []);
 
   return (
-    <TooltipProvider delayDuration={300}>
-      <header className="h-12 border-b border-border bg-sidebar-background flex items-center justify-between px-3 md:px-4 flex-shrink-0 z-40">
+    <header className="h-12 border-b border-border bg-white flex items-center justify-between px-4 flex-shrink-0 z-40">
+      <div className="flex items-center gap-3">
+        {/* Mobile hamburger */}
+        <button
+          onClick={onToggleSidebar}
+          className="md:hidden p-1.5 rounded-lg text-[#71717a] hover:text-[#18181b] hover:bg-[#f4f4f5] transition-colors"
+        >
+          <Menu className="w-4 h-4" />
+        </button>
+
+        <Link href="/" className="flex items-center text-[#71717a] hover:text-[#18181b] transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5" />
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] flex items-center justify-center shadow-sm">
+            <Frame className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="text-sm font-bold bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] bg-clip-text text-transparent">
+            FrameShot
+          </span>
+        </div>
+      </div>
+
+      {imageUrl && (
         <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden h-8 w-8"
-            onClick={onToggleSidebar}
+            variant="outline"
+            size="sm"
+            onClick={() => clearImage()}
+            className="gap-1.5"
           >
-            <Menu className="h-4 w-4" />
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Yeni</span>
           </Button>
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href="/">
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>Back to Home</TooltipContent>
-          </Tooltip>
+          <Button
+            size="sm"
+            onClick={handleExport}
+            className="gap-1.5 bg-[#6366f1] hover:bg-[#818cf8]"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">İndir</span>
+          </Button>
 
-          <div className="flex items-center gap-1.5">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center">
-              <Frame className="w-3 h-3 text-white" />
-            </div>
-            <span className="text-sm font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent hidden sm:inline">
-              FrameShot
-            </span>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={reset}
+            className="gap-1.5 text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200 hover:border-red-300"
+          >
+            Sıfırla
+          </Button>
         </div>
-
-        <div className="flex items-center gap-1.5">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={toggleTheme}
-              >
-                {isDark ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {isDark ? "Light Mode" : "Dark Mode"}
-            </TooltipContent>
-          </Tooltip>
-
-          {imageUrl && (
-            <>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => clearImage()}
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">New</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Upload New Image</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button size="sm" onClick={handleExport}>
-                    <Download className="h-3.5 w-3.5" />
-                    <span className="hidden sm:inline">Export</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Export as PNG</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={reset}
-                    className="text-destructive hover:text-destructive"
-                  >
-                    <span className="hidden sm:inline">Reset</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Reset All Settings</TooltipContent>
-              </Tooltip>
-            </>
-          )}
-        </div>
-      </header>
-    </TooltipProvider>
+      )}
+    </header>
   );
 }

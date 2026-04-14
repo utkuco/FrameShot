@@ -15,12 +15,7 @@ export const Canvas = memo(function Canvas() {
   const pattern = useEditorStore((s) => s.pattern);
 
   const gradientCSS = buildGradientCSS(backgroundGradient);
-  const patternCSS = getPatternCSS(
-    pattern.type,
-    pattern.color,
-    pattern.scale,
-    pattern.opacity
-  );
+  const patternCSS = getPatternCSS(pattern.type, pattern.color, pattern.scale, pattern.opacity);
   const shadowCSS = shadow.enabled
     ? `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${shadow.color}`
     : "none";
@@ -32,9 +27,7 @@ export const Canvas = memo(function Canvas() {
         id="preview-canvas"
         style={{
           background: gradientCSS,
-          backgroundImage: patternCSS
-            ? `${patternCSS}, ${gradientCSS}`
-            : gradientCSS,
+          backgroundImage: patternCSS ? `${patternCSS}, ${gradientCSS}` : gradientCSS,
           padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
           borderRadius: `${borderRadius}px`,
           boxShadow: shadowCSS,
@@ -82,16 +75,9 @@ function buildGradientCSS(config: { colors: string[]; direction: string }): stri
   }
 }
 
-function getPatternCSS(
-  type: string,
-  color: string,
-  scale: number,
-  opacity: number
-): string {
+function getPatternCSS(type: string, color: string, scale: number, opacity: number): string {
   const s = scale * 20;
-  const hex = Math.round(opacity * 255)
-    .toString(16)
-    .padStart(2, "0");
+  const hex = Math.round(opacity * 255).toString(16).padStart(2, "0");
   switch (type) {
     case "dots":
       return `radial-gradient(circle, ${color}${hex} 1px, transparent 1px)`;
