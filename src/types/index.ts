@@ -20,6 +20,8 @@ export type GradientDirection =
   | "radial"
   | "conic";
 
+export type ObjectFitType = "contain" | "cover" | "fill";
+
 export interface GradientConfig {
   colors: string[];
   direction: GradientDirection;
@@ -69,6 +71,13 @@ export interface AnnotationItem {
   strokeWidth?: number;
 }
 
+export interface CropArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export interface ProjectState {
   imageUrl: string | null;
   imageWidth: number;
@@ -83,6 +92,10 @@ export interface ProjectState {
   annotations: AnnotationItem[];
   exportFormat: "png" | "jpg";
   exportScale: number;
+  objectFit: ObjectFitType;
+  croppedImageUrl: string | null;
+  cropArea: CropArea | null;
+  showCropDialog: boolean;
 }
 
 export const defaultProjectState: ProjectState = {
@@ -125,6 +138,10 @@ export const defaultProjectState: ProjectState = {
   annotations: [],
   exportFormat: "png",
   exportScale: 2,
+  objectFit: "contain",
+  croppedImageUrl: null,
+  cropArea: null,
+  showCropDialog: false,
 };
 
 export const presetGradients: GradientConfig[] = [

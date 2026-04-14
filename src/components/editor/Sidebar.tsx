@@ -2,8 +2,8 @@
 
 import { useEditorStore } from "@/lib/store";
 import { presetGradients, deviceOptions } from "@/types";
-import type { GradientConfig, PaddingConfig, DeviceType } from "@/types";
-import { Palette, Monitor, Layers, Box, Sparkles, Smartphone, Tablet, Laptop, Globe } from "lucide-react";
+import type { GradientConfig, PaddingConfig, DeviceType, ObjectFitType } from "@/types";
+import { Palette, Monitor, Layers, Box, Sparkles, Smartphone, Tablet, Laptop, Globe, Maximize } from "lucide-react";
 import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Slider } from "@/components/ui/slider";
@@ -18,7 +18,7 @@ export function Sidebar() {
         <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ayarlar</h2>
       </div>
       <div className="flex-1 overflow-y-auto">
-        <Accordion type="multiple" defaultValue={["background", "device", "padding", "shadow", "transform"]} className="w-full">
+        <Accordion type="multiple" defaultValue={["background", "fit", "device", "padding", "shadow", "transform"]} className="w-full">
           <AccordionItem value="background">
             <AccordionTrigger className="px-5 hover:no-underline">
               <span className="flex items-center gap-2.5 text-sm font-medium">
@@ -30,6 +30,20 @@ export function Sidebar() {
               <div className="px-5 pb-5 space-y-5">
                 <GradientSection />
                 <PatternSection />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="fit">
+            <AccordionTrigger className="px-5 hover:no-underline">
+              <span className="flex items-center gap-2.5 text-sm font-medium">
+                <Maximize className="w-4 h-4 text-primary" />
+                Sığdırma
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-5 pb-5">
+                <FitSection />
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -96,6 +110,49 @@ export function Sidebar() {
   );
 }
 
+function FitSection() {
+  const objectFit = useEditorStore((s) => s.objectFit);
+  const setObjectFit = useEditorStore((s) => s.setObjectFit);
+
+  const fitOptions: { key: ObjectFitType; label: string; desc: string }[] = [
+    { key: "contain", label: "Sığdır", desc: "Tüm görsel görünür, boşluk kalabilir" },
+    { key: "cover", label: "Kapla", desc: "Alanı doldurur, kenarlar kesilebilir" },
+    { key: "fill", label: "Uzat", desc: "Görseli çerçeveye zorlar" },
+  ];
+
+  return (
+    <div className="space-y-2">
+      {fitOptions.map((opt) => (
+        <button
+          key={opt.key}
+          onClick={() => setObjectFit(opt.key)}
+          className={cn(
+            "w-full text-left px-3 py-2.5 rounded-xl border transition-all",
+            objectFit === opt.key
+              ? "border-[#6366f1] bg-[#6366f1]/5"
+              : "border-[#e4e4e7] hover:border-[#6366f1]/30 bg-white"
+          )}
+        >
+          <div className="flex items-center gap-2">
+            <div className={cn(
+              "w-8 h-8 rounded-lg border-2 flex items-center justify-center text-[10px] font-bold",
+              objectFit === opt.key ? "border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1]" : "border-[#d4d4d8] text-[#a1a1aa]"
+            )}>
+              {opt.key === "contain" ? "⊡" : opt.key === "cover" ? "⊞" : "⟷"}
+            </div>
+            <div>
+              <p className={cn("text-xs font-medium", objectFit === opt.key ? "text-[#6366f1]" : "text-[#3f3f46]")}>
+                {opt.label}
+              </p>
+              <p className="text-[10px] text-[#a1a1aa]">{opt.desc}</p>
+            </div>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function GradientSection() {
   const gradient = useEditorStore((s) => s.backgroundGradient);
   const setGradient = useEditorStore((s) => s.setGradient);
@@ -119,8 +176,8 @@ function GradientSection() {
               className={cn(
                 "flex-1 py-1.5 text-xs rounded-md border transition-all",
                 gradient.direction === d.value
-                  ? "border-primary bg-primary/10 text-primary font-medium"
-                  : "border-border hover:border-primary/50 text-muted-foreground"
+                  ? "border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1] font-medium"
+                  : "border-[#e4e4e7] hover:border-[#6366f1]/50 text-[#71717a]"
               )}
             >
               {d.label}
@@ -140,7 +197,7 @@ function GradientSection() {
                 onClick={() => setGradient(g)}
                 className={cn(
                   "w-full aspect-square rounded-lg border-2 transition-all hover:scale-105",
-                  isSelected ? "border-primary ring-2 ring-primary/30 scale-105" : "border-transparent hover:border-border"
+                  isSelected ? "border-[#6366f1] ring-2 ring-[#6366f1]/30 scale-105" : "border-transparent hover:border-[#e4e4e7]"
                 )}
                 style={{ background: css }}
               />
@@ -155,7 +212,7 @@ function GradientSection() {
             type="color"
             value={gradient.colors[0]}
             onChange={(e) => setGradient({ ...gradient, colors: [e.target.value, ...gradient.colors.slice(1)] })}
-            className="w-full h-8 rounded-lg border border-input cursor-pointer bg-white"
+            className="w-full h-8 rounded-lg border border-[#e4e4e7] cursor-pointer bg-white"
           />
         </div>
         <div className="flex-1">
@@ -164,7 +221,7 @@ function GradientSection() {
             type="color"
             value={gradient.colors[1]}
             onChange={(e) => setGradient({ ...gradient, colors: [gradient.colors[0], e.target.value] })}
-            className="w-full h-8 rounded-lg border border-input cursor-pointer bg-white"
+            className="w-full h-8 rounded-lg border border-[#e4e4e7] cursor-pointer bg-white"
           />
         </div>
       </div>
@@ -193,8 +250,8 @@ function PatternSection() {
             className={cn(
               "flex-1 py-2 text-xs font-medium rounded-lg border transition-all",
               pattern.type === p.key
-                ? "border-primary bg-primary/10 text-primary"
-                : "border-border hover:border-primary/50 text-muted-foreground"
+                ? "border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1]"
+                : "border-[#e4e4e7] hover:border-[#6366f1]/50 text-[#71717a]"
             )}
           >
             <span className="text-base">{p.icon}</span>
@@ -224,7 +281,7 @@ function DeviceSection() {
         if (items.length === 0) return null;
         return (
           <div key={cat.key}>
-            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <p className="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
               {cat.icon}
               {cat.key}
             </p>
@@ -236,8 +293,8 @@ function DeviceSection() {
                   className={cn(
                     "px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all",
                     device === d.type
-                      ? "border-primary bg-primary text-white"
-                      : "border-border hover:border-primary/50 text-muted-foreground bg-white"
+                      ? "border-[#6366f1] bg-[#6366f1] text-white"
+                      : "border-[#e4e4e7] hover:border-[#6366f1]/50 text-[#71717a] bg-white"
                   )}
                 >
                   {d.name}
@@ -264,12 +321,12 @@ function PaddingSection() {
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-3">
         {dirs.map((d) => (
           <div key={d.key} className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">{d.label}</span>
-              <span className="text-xs font-mono text-primary">{padding[d.key]}px</span>
+              <span className="text-xs text-[#71717a]">{d.label}</span>
+              <span className="text-xs font-mono text-[#6366f1]">{padding[d.key]}px</span>
             </div>
             <Slider
               value={[padding[d.key]]}
@@ -282,12 +339,6 @@ function PaddingSection() {
           </div>
         ))}
       </div>
-      <button
-        onClick={() => setPadding({ top: 80, right: 80, bottom: 80, left: 80 })}
-        className="w-full text-xs text-muted-foreground hover:text-foreground py-1.5 rounded-md border border-border hover:border-primary/50 transition-all"
-      >
-        Sıfırla
-      </button>
     </div>
   );
 }
@@ -299,8 +350,8 @@ function RadiusSection() {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className="text-xs text-muted-foreground">Köşe Yuvarlaklığı</Label>
-        <span className="text-xs font-mono text-primary">{borderRadius}px</span>
+        <Label className="text-xs text-[#71717a]">Köşe Yuvarlaklığı</Label>
+        <span className="text-xs font-mono text-[#6366f1]">{borderRadius}px</span>
       </div>
       <Slider
         value={[borderRadius]}
@@ -321,7 +372,7 @@ function ShadowSection() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label className="text-xs text-muted-foreground">Gölge</Label>
+        <Label className="text-xs text-[#71717a]">Gölge</Label>
         <Switch
           checked={shadow.enabled}
           onCheckedChange={(checked) => setShadow({ ...shadow, enabled: checked })}
@@ -336,8 +387,8 @@ function ShadowSection() {
           ].map((s) => (
             <div key={s.key} className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{s.label}</span>
-                <span className="text-xs font-mono text-primary">{shadow[s.key as keyof typeof shadow]}px</span>
+                <span className="text-xs text-[#71717a]">{s.label}</span>
+                <span className="text-xs font-mono text-[#6366f1]">{shadow[s.key as keyof typeof shadow]}px</span>
               </div>
               <Slider
                 value={[shadow[s.key as keyof typeof shadow] as number]}
@@ -371,9 +422,9 @@ function TransformSection() {
       {controls.map((c) => (
         <div key={c.key} className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">{c.label}</span>
-            <span className="text-xs font-mono text-primary">
-              {(c.divisor ? t3d[c.key as keyof typeof t3d] / c.divisor! : t3d[c.key as keyof typeof t3d])}{c.suffix}
+            <span className="text-xs text-[#71717a]">{c.label}</span>
+            <span className="text-xs font-mono text-[#6366f1]">
+              {(c.divisor ? (t3d[c.key as keyof typeof t3d] as number) * c.divisor : t3d[c.key as keyof typeof t3d])}{c.suffix}
             </span>
           </div>
           <Slider
@@ -388,7 +439,7 @@ function TransformSection() {
       ))}
       <button
         onClick={() => setTransform3D({ rotateX: 0, rotateY: 0, rotateZ: 0, perspective: 1000, scale: 1 })}
-        className="w-full text-xs text-muted-foreground hover:text-foreground py-1.5 rounded-md border border-border hover:border-primary/50 transition-all"
+        className="w-full text-xs text-[#71717a] hover:text-[#18181b] py-1.5 rounded-md border border-[#e4e4e7] hover:border-[#6366f1]/50 transition-all"
       >
         Sıfırla
       </button>

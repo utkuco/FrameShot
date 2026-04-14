@@ -5,6 +5,7 @@ import { UploadZone } from "./UploadZone";
 import { Canvas } from "./Canvas";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { CropDialog } from "./CropDialog";
 import { useState, useEffect } from "react";
 
 export function Editor() {
@@ -45,6 +46,9 @@ export function Editor() {
           <CanvasOrUpload />
         </main>
       </div>
+
+      {/* Crop Dialog */}
+      <CropDialog />
     </div>
   );
 }

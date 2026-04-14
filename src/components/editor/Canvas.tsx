@@ -6,6 +6,7 @@ import { memo } from "react";
 
 export const Canvas = memo(function Canvas() {
   const imageUrl = useEditorStore((s) => s.imageUrl);
+  const croppedImageUrl = useEditorStore((s) => s.croppedImageUrl);
   const backgroundGradient = useEditorStore((s) => s.backgroundGradient);
   const shadow = useEditorStore((s) => s.shadow);
   const padding = useEditorStore((s) => s.padding);
@@ -13,7 +14,9 @@ export const Canvas = memo(function Canvas() {
   const transform3d = useEditorStore((s) => s.transform3d);
   const device = useEditorStore((s) => s.device);
   const pattern = useEditorStore((s) => s.pattern);
+  const objectFit = useEditorStore((s) => s.objectFit);
 
+  const displayUrl = croppedImageUrl || imageUrl;
   const gradientCSS = buildGradientCSS(backgroundGradient);
   const patternCSS = getPatternCSS(pattern.type, pattern.color, pattern.scale, pattern.opacity);
   const shadowCSS = shadow.enabled
@@ -39,21 +42,25 @@ export const Canvas = memo(function Canvas() {
         {device !== "none" ? (
           <DeviceFrame device={device}>
             <img
-              src={imageUrl!}
+              src={displayUrl!}
               alt="Screenshot"
               draggable={false}
-              className="block w-full h-full object-cover"
+              style={{ objectFit }}
+              className="block w-full h-full"
             />
           </DeviceFrame>
         ) : (
           <img
-            src={imageUrl!}
+            src={displayUrl!}
             alt="Screenshot"
             draggable={false}
-            className="block object-contain"
+            className="block"
             style={{
+              objectFit,
               maxWidth: "min(800px, 65vw)",
               maxHeight: "min(600px, 60vh)",
+              width: objectFit === "fill" ? "100%" : undefined,
+              height: objectFit === "fill" ? "100%" : undefined,
               borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
             }}
           />

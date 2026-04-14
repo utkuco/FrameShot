@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditorStore } from "@/lib/store";
-import { Download, RotateCcw, Frame, ArrowLeft, Menu } from "lucide-react";
+import { Download, RotateCcw, Frame, ArrowLeft, Menu, Crop, Undo2 } from "lucide-react";
 import { useCallback } from "react";
 import { exportToPNG } from "@/lib/export-utils";
 import Link from "next/link";
@@ -14,15 +14,18 @@ interface HeaderProps {
 
 export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
   const imageUrl = useEditorStore((s) => s.imageUrl);
+  const croppedImageUrl = useEditorStore((s) => s.croppedImageUrl);
   const reset = useEditorStore((s) => s.reset);
   const clearImage = useEditorStore((s) => s.clearImage);
+  const setShowCropDialog = useEditorStore((s) => s.setShowCropDialog);
+  const setCroppedImageUrl = useEditorStore((s) => s.setCroppedImageUrl);
 
   const handleExport = useCallback(async () => {
     const state = useEditorStore.getState();
     if (!state.imageUrl) return;
     try {
       await exportToPNG({
-        imageUrl: state.imageUrl,
+        imageUrl: state.croppedImageUrl || state.imageUrl,
         imageWidth: state.imageWidth,
         imageHeight: state.imageHeight,
         backgroundGradient: state.backgroundGradient,
@@ -42,7 +45,6 @@ export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
   return (
     <header className="h-12 border-b border-border bg-white flex items-center justify-between px-4 flex-shrink-0 z-40">
       <div className="flex items-center gap-3">
-        {/* Mobile hamburger */}
         <button
           onClick={onToggleSidebar}
           className="md:hidden p-1.5 rounded-lg text-[#71717a] hover:text-[#18181b] hover:bg-[#f4f4f5] transition-colors"
@@ -66,21 +68,36 @@ export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
 
       {imageUrl && (
         <div className="flex items-center gap-2">
+          {/* Crop button */}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => clearImage()}
-            className="gap-1.5"
+            onClick={() => setShowCropDialog(true)}
+            className={`gap-1.5 ${croppedImageUrl ? "border-[#6366f1] text-[#6366f1] bg-[#6366f1]/5" : ""}`}
           >
+            <Crop className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Kırp</span>
+          </Button>
+
+          {/* Undo crop */}
+          {croppedImageUrl && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCroppedImageUrl(null)}
+              className="gap-1.5 text-amber-600 border-amber-200 hover:bg-amber-50"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Kırpma Geri</span>
+            </Button>
+          )}
+
+          <Button variant="outline" size="sm" onClick={() => clearImage()} className="gap-1.5">
             <RotateCcw className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Yeni</span>
           </Button>
 
-          <Button
-            size="sm"
-            onClick={handleExport}
-            className="gap-1.5 bg-[#6366f1] hover:bg-[#818cf8]"
-          >
+          <Button size="sm" onClick={handleExport} className="gap-1.5 bg-[#6366f1] hover:bg-[#818cf8]">
             <Download className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">İndir</span>
           </Button>
