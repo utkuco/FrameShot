@@ -12,6 +12,8 @@ import {
   type CropArea,
 } from "@/types";
 
+export type ExportMode = "full" | "frame-only" | "transparent";
+
 interface EditorStore {
   imageUrl: string | null;
   imageWidth: number;
@@ -30,6 +32,7 @@ interface EditorStore {
   croppedImageUrl: string | null;
   cropArea: CropArea | null;
   showCropDialog: boolean;
+  exportMode: ExportMode;
 
   setImage: (url: string, w: number, h: number) => void;
   clearImage: () => void;
@@ -48,11 +51,13 @@ interface EditorStore {
   setCroppedImageUrl: (url: string | null) => void;
   setCropArea: (a: CropArea | null) => void;
   setShowCropDialog: (show: boolean) => void;
+  setExportMode: (m: ExportMode) => void;
   reset: () => void;
 }
 
 export const useEditorStore = create<EditorStore>((set) => ({
   ...defaultProjectState,
+  exportMode: "full",
 
   setImage: (url, w, h) => set({ imageUrl: url, imageWidth: w, imageHeight: h, croppedImageUrl: null, cropArea: null }),
   clearImage: () => set({ imageUrl: null, imageWidth: 0, imageHeight: 0, croppedImageUrl: null, cropArea: null }),
@@ -71,5 +76,6 @@ export const useEditorStore = create<EditorStore>((set) => ({
   setCroppedImageUrl: (croppedImageUrl) => set({ croppedImageUrl }),
   setCropArea: (cropArea) => set({ cropArea }),
   setShowCropDialog: (showCropDialog) => set({ showCropDialog }),
-  reset: () => set(defaultProjectState),
+  setExportMode: (exportMode) => set({ exportMode }),
+  reset: () => set({ ...defaultProjectState, exportMode: "full" }),
 }));

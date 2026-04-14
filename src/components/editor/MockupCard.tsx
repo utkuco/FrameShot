@@ -84,15 +84,15 @@ export function MockupCard({ gradient, title, desc, device, dark, imgSrc }: {
           )}
           {device === "none" && (
             <div
-              className="max-w-[220px] rounded-2xl overflow-hidden shadow-2xl"
+              className="max-w-[180px] max-h-[130px] rounded-2xl overflow-hidden shadow-2xl"
               style={{ boxShadow: dark ? "0 25px 50px rgba(0,0,0,0.5)" : "0 20px 40px rgba(0,0,0,0.15)" }}
             >
               <Image
                 src={imgSrc}
                 alt={title}
-                width={220}
-                height={157}
-                className="w-full block"
+                width={180}
+                height={130}
+                className="w-full h-full object-cover"
                 unoptimized
               />
             </div>

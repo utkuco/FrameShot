@@ -2,7 +2,7 @@
 
 import { useEditorStore } from "@/lib/store";
 import { DeviceFrame } from "./DeviceFrame";
-import { memo } from "react";
+import { memo, useState, useCallback, useRef } from "react";
 
 export const Canvas = memo(function Canvas() {
   const imageUrl = useEditorStore((s) => s.imageUrl);
@@ -16,6 +16,10 @@ export const Canvas = memo(function Canvas() {
   const pattern = useEditorStore((s) => s.pattern);
   const objectFit = useEditorStore((s) => s.objectFit);
 
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0, ox: 0, oy: 0 });
+
   const displayUrl = croppedImageUrl || imageUrl;
   const gradientCSS = buildGradientCSS(backgroundGradient);
   const patternCSS = getPatternCSS(pattern.type, pattern.color, pattern.scale, pattern.opacity);
@@ -28,8 +32,31 @@ export const Canvas = memo(function Canvas() {
   const clampedPerspective = Math.max(300, Math.min(1500, transform3d.perspective));
   const transformCSS = `perspective(${clampedPerspective}px) rotateX(${clampedRotateX}deg) rotateY(${clampedRotateY}deg) scale(${clampedScale})`;
 
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX, y: e.clientY, ox: offset.x, oy: offset.y };
+  }, [offset]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    setOffset({ x: dragStart.current.ox + dx, y: dragStart.current.oy + dy });
+  }, [isDragging]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   return (
-    <div className="flex items-center justify-center p-4 sm:p-8 w-full h-full">
+    <div
+      className="flex items-center justify-center p-4 sm:p-8 w-full h-full cursor-grab active:cursor-grabbing select-none"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
       <div
         id="preview-canvas"
         style={{
@@ -38,8 +65,8 @@ export const Canvas = memo(function Canvas() {
           padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
           borderRadius: `${borderRadius}px`,
           boxShadow: shadowCSS,
-          transform: transformCSS,
-          transition: "transform 0.3s ease",
+          transform: `translate(${offset.x}px, ${offset.y}px) ${transformCSS}`,
+          transition: isDragging ? "none" : "transform 0.3s ease",
         }}
         className="relative inline-flex items-center justify-center max-w-full"
       >
