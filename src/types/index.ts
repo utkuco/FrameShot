@@ -160,13 +160,13 @@ export const presetGradients: GradientConfig[] = [
 ];
 
 export const deviceOptions: { name: string; type: DeviceType; category: string }[] = [
-  { name: "Yok", type: "none", category: "Genel" },
-  { name: "iPhone 15", type: "iphone-15", category: "Telefon" },
-  { name: "iPhone 15 Pro", type: "iphone-15-pro", category: "Telefon" },
-  { name: "Pixel 8", type: "pixel-8", category: "Telefon" },
+  { name: "None", type: "none", category: "General" },
+  { name: "iPhone 15", type: "iphone-15", category: "Phone" },
+  { name: "iPhone 15 Pro", type: "iphone-15-pro", category: "Phone" },
+  { name: "Pixel 8", type: "pixel-8", category: "Phone" },
   { name: "iPad Pro", type: "ipad-pro", category: "Tablet" },
-  { name: "MacBook Pro", type: "macbook-pro", category: "Dizüstü" },
-  { name: "Chrome", type: "browser-chrome", category: "Tarayıcı" },
-  { name: "Safari", type: "browser-safari", category: "Tarayıcı" },
-  { name: "Firefox", type: "browser-firefox", category: "Tarayıcı" },
+  { name: "MacBook Pro", type: "macbook-pro", category: "Laptop" },
+  { name: "Chrome", type: "browser-chrome", category: "Browser" },
+  { name: "Safari", type: "browser-safari", category: "Browser" },
+  { name: "Firefox", type: "browser-firefox", category: "Browser" },
 ];

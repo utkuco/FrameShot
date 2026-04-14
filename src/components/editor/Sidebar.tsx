@@ -52,7 +52,7 @@ export function Sidebar() {
             <AccordionTrigger className="px-5 hover:no-underline">
               <span className="flex items-center gap-2.5 text-sm font-medium">
                 <Monitor className="w-4 h-4 text-primary" />
-                Cihaz Frame
+                Device Frame
               </span>
             </AccordionTrigger>
             <AccordionContent>
@@ -95,7 +95,7 @@ export function Sidebar() {
             <AccordionTrigger className="px-5 hover:no-underline">
               <span className="flex items-center gap-2.5 text-sm font-medium">
                 <Sparkles className="w-4 h-4 text-primary" />
-                3D Dönüşüm
+                3D Transform
               </span>
             </AccordionTrigger>
             <AccordionContent>
@@ -234,9 +234,9 @@ function PatternSection() {
   const setPattern = useEditorStore((s) => s.setPattern);
   const patterns = [
     { key: "none", label: "None", icon: "—" },
-    { key: "dots", label: "Nokta", icon: "●" },
-    { key: "grid", label: "Izgara", icon: "▦" },
-    { key: "diagonal", label: "Çapraz", icon: "╲" },
+    { key: "dots", label: "Dots", icon: "●" },
+    { key: "grid", label: "Grid", icon: "▦" },
+    { key: "diagonal", label: "Diagonal", icon: "╲" },
   ];
 
   return (
@@ -267,11 +267,11 @@ function DeviceSection() {
   const setDevice = useEditorStore((s) => s.setDevice);
 
   const categories = [
-    { key: "Genel", icon: <Monitor className="w-3 h-3" /> },
-    { key: "Telefon", icon: <Smartphone className="w-3 h-3" /> },
+    { key: "General", icon: <Monitor className="w-3 h-3" /> },
+    { key: "Phone", icon: <Smartphone className="w-3 h-3" /> },
     { key: "Tablet", icon: <Tablet className="w-3 h-3" /> },
-    { key: "Dizüstü", icon: <Laptop className="w-3 h-3" /> },
-    { key: "Tarayıcı", icon: <Globe className="w-3 h-3" /> },
+    { key: "Laptop", icon: <Laptop className="w-3 h-3" /> },
+    { key: "Browser", icon: <Globe className="w-3 h-3" /> },
   ];
 
   return (

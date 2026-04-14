@@ -49,53 +49,67 @@ export const Canvas = memo(function Canvas() {
     setIsDragging(false);
   }, []);
 
+  if (!imageUrl) return null;
+
   return (
     <div
-      className="flex items-center justify-center p-4 sm:p-8 w-full h-full cursor-grab active:cursor-grabbing select-none"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
+      className="flex items-center justify-center p-4 sm:p-8 w-full h-full overflow-auto"
+      style={{ cursor: isDragging ? "grabbing" : "default" }}
     >
+      {/* Export boundary indicator */}
       <div
-        id="preview-canvas"
+        className="relative"
         style={{
-          background: gradientCSS,
-          backgroundImage: patternCSS ? `${patternCSS}, ${gradientCSS}` : gradientCSS,
           padding: `${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px`,
           borderRadius: `${borderRadius}px`,
           boxShadow: shadowCSS,
           transform: `translate(${offset.x}px, ${offset.y}px) ${transformCSS}`,
           transition: isDragging ? "none" : "transform 0.3s ease",
+          background: gradientCSS,
+          backgroundImage: patternCSS ? `${patternCSS}, ${gradientCSS}` : gradientCSS,
         }}
-        className="relative inline-flex items-center justify-center max-w-full"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
       >
-        {device !== "none" ? (
-          <DeviceFrame device={device}>
+        {/* Export boundary label */}
+        <div className="absolute -top-7 left-0 text-[9px] font-mono text-[#a1a1aa] bg-white/80 px-1.5 py-0.5 rounded border border-[#e4e4e7]">
+          {padding.left + padding.right + (device !== "none" ? (device.includes("browser") ? 0 : (device.includes("macbook") ? 64 : 24)) : 0)} ×{" "}
+          {padding.top + padding.bottom + (device !== "none" ? (device.includes("browser") ? 36 : (device.includes("macbook") ? 74 : (device.includes("ipad") ? 32 : 40))) : 0)} px export
+        </div>
+
+        {/* Corner handles for drag */}
+        <div className="absolute -inset-0.5 rounded-[calc(var(--radius,8px)+2px)] border-2 border-dashed border-[#6366f1]/40 pointer-events-none opacity-0 hover:opacity-100 transition-opacity" />
+
+        {/* Content */}
+        <div className="relative" style={{ cursor: isDragging ? "grabbing" : "grab" }}>
+          {device !== "none" ? (
+            <DeviceFrame device={device}>
+              <img
+                src={displayUrl!}
+                alt="Screenshot"
+                draggable={false}
+                style={{ objectFit }}
+                className="block w-full h-full"
+              />
+            </DeviceFrame>
+          ) : (
             <img
               src={displayUrl!}
               alt="Screenshot"
               draggable={false}
-              style={{ objectFit }}
-              className="block w-full h-full"
+              style={{
+                objectFit,
+                maxWidth: "min(800px, 65vw)",
+                maxHeight: "min(600px, 60vh)",
+                width: objectFit === "fill" ? "100%" : undefined,
+                height: objectFit === "fill" ? "100%" : undefined,
+                borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
+              }}
             />
-          </DeviceFrame>
-        ) : (
-          <img
-            src={displayUrl!}
-            alt="Screenshot"
-            draggable={false}
-            className="block"
-            style={{
-              objectFit,
-              maxWidth: "min(800px, 65vw)",
-              maxHeight: "min(600px, 60vh)",
-              width: objectFit === "fill" ? "100%" : undefined,
-              height: objectFit === "fill" ? "100%" : undefined,
-              borderRadius: `${Math.max(borderRadius - padding.top / 4, 4)}px`,
-            }}
-          />
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
