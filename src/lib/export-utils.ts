@@ -1,4 +1,4 @@
-import { GradientConfig, PatternConfig, ShadowConfig, PaddingConfig, Transform3DConfig, DeviceType } from "@/types";
+import { GradientConfig, PatternConfig, ShadowConfig, PaddingConfig, DeviceType } from "@/types";
 
 export type ExportMode = "full" | "frame-only" | "transparent";
 
@@ -11,39 +11,102 @@ interface ExportOptions {
   shadow: ShadowConfig;
   padding: PaddingConfig;
   borderRadius: number;
-  transform3d: Transform3DConfig;
+  transform3d: { rotateX: number; rotateY: number; scale: number; perspective: number };
   device: DeviceType;
   exportScale: number;
   objectFit: string;
   exportMode: ExportMode;
 }
 
-function createGradient(ctx: CanvasRenderingContext2D, w: number, h: number, config: GradientConfig): CanvasGradient {
-  let gradient: CanvasGradient;
-  switch (config.direction) {
-    case "to-right": gradient = ctx.createLinearGradient(0, 0, w, 0); break;
-    case "to-bottom": gradient = ctx.createLinearGradient(0, 0, 0, h); break;
-    case "to-br": gradient = ctx.createLinearGradient(0, 0, w, h); break;
-    case "to-bl": gradient = ctx.createLinearGradient(w, 0, 0, h); break;
-    case "radial": gradient = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) / 2); break;
-    default: gradient = ctx.createLinearGradient(0, 0, w, h);
-  }
-  config.colors.forEach((color, i) => {
-    gradient.addColorStop(i / Math.max(config.colors.length - 1, 1), color);
+// ============================================================
+// IMAGE LOADING
+// ============================================================
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
   });
-  return gradient;
 }
 
-function drawPattern(ctx: CanvasRenderingContext2D, w: number, h: number, pattern: PatternConfig) {
-  if (pattern.type === "none") return;
-  const hex = Math.round(pattern.opacity * 255).toString(16).padStart(2, "0");
-  const rgba = `${pattern.color}${hex}`;
-  const s = pattern.scale * 20;
+// ============================================================
+// ROUNDED RECT PATH
+// ============================================================
+
+function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  const rad = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rad, y);
+  ctx.lineTo(x + w - rad, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + rad);
+  ctx.lineTo(x + w, y + h - rad);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+  ctx.lineTo(x + rad, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - rad);
+  ctx.lineTo(x, y + rad);
+  ctx.quadraticCurveTo(x, y, x + rad, y);
+  ctx.closePath();
+}
+
+// ============================================================
+// IMAGE DRAWING (contain/cover/fill)
+// ============================================================
+
+function drawImageFit(ctx: CanvasRenderingContext2D, img: HTMLImageElement, dx: number, dy: number, dw: number, dh: number, objectFit: string) {
+  const iw = img.naturalWidth;
+  const ih = img.naturalHeight;
+  if (objectFit === "fill") {
+    ctx.drawImage(img, dx, dy, dw, dh);
+  } else if (objectFit === "cover") {
+    const scale = Math.max(dw / iw, dh / ih);
+    const w = iw * scale, h = ih * scale;
+    ctx.drawImage(img, dx + (dw - w) / 2, dy + (dh - h) / 2, w, h);
+  } else {
+    // contain — fill black then draw
+    const scale = Math.min(dw / iw, dh / ih);
+    const w = iw * scale, h = ih * scale;
+    ctx.fillStyle = "#000";
+    ctx.fillRect(dx, dy, dw, dh);
+    ctx.drawImage(img, dx + (dw - w) / 2, dy + (dh - h) / 2, w, h);
+  }
+}
+
+// ============================================================
+// GRADIENT
+// ============================================================
+
+function makeGradient(ctx: CanvasRenderingContext2D, w: number, h: number, config: GradientConfig): CanvasGradient {
+  let g: CanvasGradient;
+  switch (config.direction) {
+    case "to-right": g = ctx.createLinearGradient(0, 0, w, 0); break;
+    case "to-bottom": g = ctx.createLinearGradient(0, 0, 0, h); break;
+    case "to-br": g = ctx.createLinearGradient(0, 0, w, h); break;
+    case "to-bl": g = ctx.createLinearGradient(w, 0, 0, h); break;
+    case "radial": g = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) / 2); break;
+    default: g = ctx.createLinearGradient(0, 0, w, h);
+  }
+  config.colors.forEach((color, i) => {
+    g.addColorStop(i / Math.max(config.colors.length - 1, 1), color);
+  });
+  return g;
+}
+
+// ============================================================
+// PATTERN
+// ============================================================
+
+function drawPattern(ctx: CanvasRenderingContext2D, w: number, h: number, p: PatternConfig) {
+  if (p.type === "none") return;
+  const hex = Math.round(p.opacity * 255).toString(16).padStart(2, "0");
+  const rgba = `${p.color}${hex}`;
+  const s = p.scale * 20;
   ctx.save();
   ctx.strokeStyle = rgba;
   ctx.fillStyle = rgba;
-
-  switch (pattern.type) {
+  switch (p.type) {
     case "dots":
       for (let x = 0; x < w; x += s) for (let y = 0; y < h; y += s) {
         ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI * 2); ctx.fill();
@@ -62,295 +125,294 @@ function drawPattern(ctx: CanvasRenderingContext2D, w: number, h: number, patter
   ctx.restore();
 }
 
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
-}
+// ============================================================
+// DEVICE FRAMES
+// All dimensions are in CSS pixels, matched to DeviceFrame.tsx
+// ============================================================
 
-function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-  const rad = Math.min(r, w / 2, h / 2);
-  ctx.beginPath();
-  ctx.moveTo(x + rad, y);
-  ctx.lineTo(x + w - rad, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + rad);
-  ctx.lineTo(x + w, y + h - rad);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
-  ctx.lineTo(x + rad, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - rad);
-  ctx.lineTo(x, y + rad);
-  ctx.quadraticCurveTo(x, y, x + rad, y);
-  ctx.closePath();
-}
+function drawDeviceFrame(ctx: CanvasRenderingContext2D, device: DeviceType, img: HTMLImageElement, objectFit: string) {
+  // Determine screen dimensions — scale image to TARGET_SH=400 height
+  const TARGET_SH = 400;
+  const sh = TARGET_SH;
+  const sw = Math.round(sh * (img.naturalWidth / img.naturalHeight));
 
-function getNaturalScreenSize(device: DeviceType, imgW: number, imgH: number): { sw: number; sh: number } {
-  const targetH = 400;
-  const scale = targetH / Math.max(imgH, 1);
-  const sw = Math.round(imgW * scale);
-  const sh = Math.round(imgH * scale);
-  return { sw, sh };
-}
+  if (device === "iphone-15" || device === "iphone-15-pro") {
+    const isPro = device === "iphone-15-pro";
+    const PAD = 10;
+    const ISLAND_H = 32;
+    const ISLAND_W_OFFSET = Math.round((sw + PAD * 2) * 0.26); // island width = 48% of frame
 
-function drawDeviceFrame(ctx: CanvasRenderingContext2D, device: DeviceType, img: HTMLImageElement, objectFit: string, destX: number, destY: number) {
-  const { sw, sh } = getNaturalScreenSize(device, img.naturalWidth, img.naturalHeight);
+    const fw = sw + PAD * 2;
+    const fh = sh + PAD * 2 + ISLAND_H + 8; // extra for notch area + home bar
+    const sx = PAD;
+    const sy = PAD + ISLAND_H + 4;
+    const for_ = 40;
+    const fir = 30;
+    const bodyColor = isPro ? "#1d1d1f" : "#2a2a2e";
+    const homeBarW = Math.round(fw * 0.36);
 
-  switch (device) {
-    case "iphone-15":
-    case "iphone-15-pro": {
-      const pad = 12;
-      const bodyW = sw + pad * 2;
-      const bodyH = sh + pad * 2 + 16;
-      const r = 40;
-      const notchW = sw * 0.38;
-      const notchH = 18;
+    // Body
+    ctx.fillStyle = bodyColor;
+    rrect(ctx, 0, 0, fw, fh, for_);
+    ctx.fill();
 
-      // Body
-      ctx.fillStyle = device === "iphone-15-pro" ? "#1d1d1f" : "#2a2a2e";
-      roundRectPath(ctx, destX, destY, bodyW, bodyH, r);
-      ctx.fill();
-
-      // Screen cutout (black area)
-      const scrX = destX + pad;
-      const scrY = destY + pad + notchH;
-      const scrR = 30;
-      ctx.fillStyle = "#000";
-      roundRectPath(ctx, scrX, scrY, sw, sh, scrR);
-      ctx.fill();
-
-      // Draw image inside screen
-      ctx.save();
-      roundRectPath(ctx, scrX, scrY, sw, sh, scrR);
-      ctx.clip();
-      drawImageFit(ctx, img, scrX, scrY, sw, sh, objectFit);
-      ctx.restore();
-
-      // Notch overlay
-      ctx.fillStyle = device === "iphone-15-pro" ? "#1d1d1f" : "#2a2a2e";
-      const notchX = destX + pad + (sw - notchW) / 2;
-      roundRectPath(ctx, notchX, destY + pad, notchW, notchH, 8);
-      ctx.fill();
-      break;
-    }
-
-    case "pixel-8": {
-      const pad = 12;
-      const bodyW = sw + pad * 2;
-      const bodyH = sh + pad * 2;
-      const r = 36;
-
-      ctx.fillStyle = "#1a1a1a";
-      roundRectPath(ctx, destX, destY, bodyW, bodyH, r);
-      ctx.fill();
-
-      const scrX = destX + pad;
-      const scrY = destY + pad;
-      const scrR = 28;
-      ctx.fillStyle = "#000";
-      roundRectPath(ctx, scrX, scrY, sw, sh, scrR);
-      ctx.fill();
-
-      ctx.save();
-      roundRectPath(ctx, scrX, scrY, sw, sh, scrR);
-      ctx.clip();
-      drawImageFit(ctx, img, scrX, scrY, sw, sh, objectFit);
-      ctx.restore();
-
-      // Camera
-      const camW = sw * 0.28;
-      const camX = destX + pad + (sw - camW) / 2;
-      ctx.fillStyle = "#1a1a1a";
-      roundRectPath(ctx, camX, destY + pad, camW, 12, 3);
-      ctx.fill();
-      break;
-    }
-
-    case "ipad-pro": {
-      const pad = 16;
-      const bodyW = sw + pad * 2;
-      const bodyH = sh + pad * 2;
-      const r = 20;
-
-      ctx.fillStyle = "#1d1d1f";
-      roundRectPath(ctx, destX, destY, bodyW, bodyH, r);
-      ctx.fill();
-
-      const scrX = destX + pad;
-      const scrY = destY + pad;
-      const scrR = 10;
-      ctx.fillStyle = "#000";
-      roundRectPath(ctx, scrX, scrY, sw, sh, scrR);
-      ctx.fill();
-
-      ctx.save();
-      roundRectPath(ctx, scrX, scrY, sw, sh, scrR);
-      ctx.clip();
-      drawImageFit(ctx, img, scrX, scrY, sw, sh, objectFit);
-      ctx.restore();
-      break;
-    }
-
-    case "macbook-pro": {
-      const pad = 16;
-      const bodyW = sw + pad * 2;
-      const bodyH = sh + pad * 2 + 10;
-      const baseH = 16;
-
-      ctx.fillStyle = "#1d1d1f";
-      roundRectPath(ctx, destX, destY, bodyW, sh + 20, 12);
-      ctx.fill();
-
-      // Camera
-      ctx.fillStyle = "#3a3a3c";
-      ctx.beginPath();
-      ctx.arc(destX + bodyW / 2, destY + 8, 4, 0, Math.PI * 2);
-      ctx.fill();
-
-      const scrX = destX + pad;
-      const scrY = destY + 18;
-      ctx.fillStyle = "#000";
-      ctx.fillRect(scrX, scrY, sw, sh);
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(scrX, scrY, sw, sh);
-      ctx.clip();
-      drawImageFit(ctx, img, scrX, scrY, sw, sh, objectFit);
-      ctx.restore();
-
-      // Base
-      const baseX = destX + (bodyW - (bodyW + 40)) / 2;
-      const baseY = destY + sh + 18;
-      const baseW = bodyW + 40;
-      const grad = ctx.createLinearGradient(baseX, baseY, baseX, baseY + baseH);
-      grad.addColorStop(0, "#3a3a3c");
-      grad.addColorStop(1, "#2a2a2e");
-      ctx.fillStyle = grad;
-      roundRectPath(ctx, baseX, baseY, baseW, baseH, 4);
-      ctx.fill();
-      break;
-    }
-
-    case "browser-chrome":
-    case "browser-safari":
-    case "browser-firefox": {
-      const tabH = 36;
-
-      const bgColor = device === "browser-safari" ? "#f5f5f7"
-        : device === "browser-chrome" ? "#202124" : "#1c1b22";
-      ctx.fillStyle = bgColor;
-      roundRectPath(ctx, destX, destY, sw, tabH + 2, 12);
-      ctx.fill();
-      ctx.fillRect(destX, destY + tabH - 2, sw, 4);
-
-      const dotColors = device === "browser-firefox"
-        ? ["#ff6134", "#ffbd4f", "#28c840"]
-        : ["#ff5f57", "#febc2e", "#28c840"];
-      dotColors.forEach((color, i) => {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(destX + 16 + i * 16, destY + tabH / 2, 5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      const urlBg = device === "browser-safari" ? "#fff" : "#35363a";
-      const urlText = device === "browser-safari" ? "#6e6e73" : "#9aa0a6";
-      roundRectPath(ctx, destX + 60, destY + 10, sw - 76, 16, 4);
-      ctx.fillStyle = urlBg;
-      ctx.fill();
-      ctx.fillStyle = urlText;
-      ctx.font = "10px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("example.com", destX + 60 + (sw - 76) / 2, destY + 22);
-
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(destX, destY + tabH, sw, sh);
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(destX, destY + tabH, sw, sh);
-      ctx.clip();
-      drawImageFit(ctx, img, destX, destY + tabH, sw, sh, objectFit);
-      ctx.restore();
-      break;
-    }
-
-    default:
-      ctx.drawImage(img, destX, destY, sw, sh);
-  }
-}
-
-function drawImageFit(ctx: CanvasRenderingContext2D, img: HTMLImageElement, dx: number, dy: number, dw: number, dh: number, objectFit: string) {
-  const iw = img.naturalWidth;
-  const ih = img.naturalHeight;
-
-  if (objectFit === "fill") {
-    ctx.drawImage(img, dx, dy, dw, dh);
-  } else if (objectFit === "cover") {
-    const scale = Math.max(dw / iw, dh / ih);
-    const w = iw * scale;
-    const h = ih * scale;
-    ctx.drawImage(img, dx + (dw - w) / 2, dy + (dh - h) / 2, w, h);
-  } else {
-    // contain
-    const scale = Math.min(dw / iw, dh / ih);
-    const w = iw * scale;
-    const h = ih * scale;
+    // Screen (black fill under image)
     ctx.fillStyle = "#000";
-    ctx.fillRect(dx, dy, dw, dh);
-    ctx.drawImage(img, dx + (dw - w) / 2, dy + (dh - h) / 2, w, h);
+    rrect(ctx, sx, sy, sw, sh, fir);
+    ctx.fill();
+
+    // Screen image clipped
+    ctx.save();
+    rrect(ctx, sx, sy, sw, sh, fir);
+    ctx.clip();
+    drawImageFit(ctx, img, sx, sy, sw, sh, objectFit);
+    ctx.restore();
+
+    // Dynamic Island — sits ABOVE screen, inside the body padding area
+    const iw = Math.round(fw * 0.48);
+    const ix = (fw - iw) / 2;
+    const iy = PAD;
+    ctx.fillStyle = bodyColor;
+    rrect(ctx, ix, iy, iw, ISLAND_H, ISLAND_H / 2);
+    ctx.fill();
+    if (isPro) {
+      ctx.fillStyle = "#111";
+      ctx.beginPath();
+      ctx.arc(fw / 2, iy + ISLAND_H / 2, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#333";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Home bar
+    const hbX = (fw - homeBarW) / 2;
+    const hbY = fh - 8;
+    ctx.fillStyle = "rgba(255,255,255,0.3)";
+    rrect(ctx, hbX, hbY, homeBarW, 3, 2);
+    ctx.fill();
+
+  } else if (device === "pixel-8") {
+    const PAD = 10;
+    const CAM_H = 16;
+    const fw = sw + PAD * 2;
+    const fh = sh + PAD * 2;
+    const sx = PAD;
+    const sy = PAD + CAM_H + 4;
+    const for_ = 36;
+    const fir = 28;
+
+    ctx.fillStyle = "#1a1a1a";
+    rrect(ctx, 0, 0, fw, fh, for_);
+    ctx.fill();
+
+    ctx.fillStyle = "#000";
+    rrect(ctx, sx, sy, sw, sh, fir);
+    ctx.fill();
+
+    ctx.save();
+    rrect(ctx, sx, sy, sw, sh, fir);
+    ctx.clip();
+    drawImageFit(ctx, img, sx, sy, sw, sh, objectFit);
+    ctx.restore();
+
+    // Camera pill
+    const cw = Math.round(fw * 0.28);
+    const cx = (fw - cw) / 2;
+    const cy = PAD;
+    ctx.fillStyle = "#1a1a1a";
+    rrect(ctx, cx, cy, cw, CAM_H, 4);
+    ctx.fill();
+    ctx.fillStyle = "#111";
+    ctx.beginPath();
+    ctx.arc(cx + cw / 2, cy + CAM_H / 2, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+  } else if (device === "ipad-pro") {
+    const PAD = 14;
+    const fw = sw + PAD * 2;
+    const fh = sh + PAD * 2;
+    const sx = PAD;
+    const sy = PAD;
+    const for_ = 20;
+    const fir = 10;
+
+    ctx.fillStyle = "#1d1d1f";
+    rrect(ctx, 0, 0, fw, fh, for_);
+    ctx.fill();
+
+    ctx.fillStyle = "#000";
+    rrect(ctx, sx, sy, sw, sh, fir);
+    ctx.fill();
+
+    ctx.save();
+    rrect(ctx, sx, sy, sw, sh, fir);
+    ctx.clip();
+    drawImageFit(ctx, img, sx, sy, sw, sh, objectFit);
+    ctx.restore();
+
+  } else if (device === "macbook-pro") {
+    const PAD = 16;
+    const CAM_R = 8;
+    const BASE_OH = 40;
+    const BASE_H = 16;
+
+    const fw = sw + PAD * 2;
+    const fh = sh + PAD * 2 + CAM_R * 2;
+    const sx = PAD;
+    const sy = PAD + CAM_R * 2 + 2;
+    const for_ = 12;
+    const baseW = fw + BASE_OH;
+
+    // Screen housing
+    ctx.fillStyle = "#1d1d1f";
+    rrect(ctx, 0, 0, fw, fh, for_);
+    ctx.fill();
+
+    // Camera
+    ctx.fillStyle = "#3a3a3c";
+    ctx.beginPath();
+    ctx.arc(fw / 2, CAM_R, CAM_R - 1, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Screen
+    ctx.fillStyle = "#000";
+    ctx.fillRect(sx, sy, sw, sh);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(sx, sy, sw, sh);
+    ctx.clip();
+    drawImageFit(ctx, img, sx, sy, sw, sh, objectFit);
+    ctx.restore();
+
+    // Base
+    const baseX = (fw - baseW) / 2;
+    const baseY = fh;
+    const baseGrad = ctx.createLinearGradient(baseX, baseY, baseX, baseY + BASE_H);
+    baseGrad.addColorStop(0, "#3a3a3c");
+    baseGrad.addColorStop(1, "#2a2a2e");
+    ctx.fillStyle = baseGrad;
+    rrect(ctx, baseX, baseY, baseW, BASE_H, 4);
+    ctx.fill();
+
+    // Hinge
+    ctx.fillStyle = "#555";
+    ctx.fillRect(fw / 2 - 20, baseY + 4, 40, 2);
+
+  } else if (device === "browser-chrome" || device === "browser-safari" || device === "browser-firefox") {
+    const TAB_H = 36;
+    const fw = sw;
+    const fh = sh + TAB_H;
+    const dotColors = device === "browser-firefox"
+      ? (["#ff6134", "#ffbd4f", "#28c840"] as [string, string, string])
+      : (["#ff5f57", "#febc2e", "#28c840"] as [string, string, string]);
+    const bgColor = device === "browser-safari" ? "#f5f5f7"
+      : device === "browser-chrome" ? "#202124" : "#1c1b22";
+    const urlBg = device === "browser-safari" ? "#ffffff"
+      : device === "browser-chrome" ? "#35363a" : "#2b2a33";
+    const urlText = device === "browser-safari" ? "#6e6e73"
+      : device === "browser-chrome" ? "#9aa0a6" : "#9aa0a6";
+
+    // Tab bar + rounded top
+    ctx.fillStyle = bgColor;
+    rrect(ctx, 0, 0, fw, fh, 12);
+    ctx.fill();
+    ctx.fillRect(0, TAB_H - 2, fw, 2);
+
+    // Traffic lights
+    const dotY = TAB_H / 2;
+    dotColors.forEach((color, i) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(16 + i * 16, dotY, 5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // URL bar
+    ctx.fillStyle = urlBg;
+    rrect(ctx, 62, dotY - 8, fw - 76, 16, 4);
+    ctx.fill();
+    ctx.fillStyle = urlText;
+    ctx.font = "10px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("example.com", 62 + (fw - 76) / 2, dotY + 3);
+
+    // White screen area
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, TAB_H, fw, sh);
+
+    // Screen clipped
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, TAB_H, fw, sh);
+    ctx.clip();
+    drawImageFit(ctx, img, 0, TAB_H, fw, sh, objectFit);
+    ctx.restore();
+
+  } else {
+    // No device — draw raw image
+    ctx.drawImage(img, 0, 0, sw, sh);
   }
 }
+
+// ============================================================
+// EXPORT
+// ============================================================
 
 export async function exportToPNG(options: ExportOptions): Promise<void> {
-  const { imageUrl, padding, borderRadius, exportScale, exportMode } = options;
+  const { imageUrl, padding, borderRadius, exportScale, exportMode, device } = options;
   const img = await loadImage(imageUrl);
 
-  const hasDevice = options.device !== "none";
+  const hasDevice = device !== "none";
   const hasBg = exportMode === "full";
   const isTransparent = exportMode === "transparent";
 
-  // Screen dimensions (what the image is displayed at inside the device)
-  const { sw, sh } = getNaturalScreenSize(options.device, img.naturalWidth, img.naturalHeight);
+  // Screen pixel size (target 400px height)
+  const TARGET_SH = 400;
+  const screenH = TARGET_SH;
+  const screenW = Math.round(screenH * (img.naturalWidth / img.naturalHeight));
 
-  // Frame overhead
-  let framePadX = 0, framePadY = 0, frameExtraH = 0;
-  if (hasDevice) {
-    switch (options.device) {
-      case "iphone-15":
-      case "iphone-15-pro": framePadX = 12; framePadY = 12; frameExtraH = 16 + 18; break; // notch
-      case "pixel-8": framePadX = 12; framePadY = 12; frameExtraH = 12; break;
-      case "ipad-pro": framePadX = 16; framePadY = 16; frameExtraH = 0; break;
-      case "macbook-pro": framePadX = 16; framePadY = 18; frameExtraH = 34; break;
-      case "browser-chrome":
-      case "browser-safari":
-      case "browser-firefox": framePadX = 0; framePadY = 0; frameExtraH = 36; break;
-    }
+  // Frame overhead per device type
+  let frameW: number, frameH: number;
+  if (!hasDevice) {
+    frameW = screenW;
+    frameH = screenH;
+  } else if (device === "iphone-15" || device === "iphone-15-pro") {
+    const PAD = 10;
+    frameW = screenW + PAD * 2;
+    frameH = screenH + PAD * 2 + 32 + 8 + 3; // pad + island + gap + home bar
+  } else if (device === "pixel-8") {
+    const PAD = 10;
+    frameW = screenW + PAD * 2;
+    frameH = screenH + PAD * 2 + 20;
+  } else if (device === "ipad-pro") {
+    const PAD = 14;
+    frameW = screenW + PAD * 2;
+    frameH = screenH + PAD * 2;
+  } else if (device === "macbook-pro") {
+    const PAD = 16;
+    frameW = screenW + PAD * 2;
+    frameH = screenH + PAD * 2 + 18 + 16; // pad + camera notch + base
+  } else {
+    // browser
+    const TAB_H = 36;
+    frameW = screenW;
+    frameH = screenH + TAB_H;
   }
-
-  const frameW = sw + framePadX * 2;
-  const frameH = sh + framePadY * 2 + frameExtraH;
-
-  const contentW = hasDevice ? frameW : sw;
-  const contentH = hasDevice ? frameH : sh;
 
   const padL = hasBg ? padding.left : 0;
   const padR = hasBg ? padding.right : 0;
   const padT = hasBg ? padding.top : 0;
   const padB = hasBg ? padding.bottom : 0;
 
-  const totalW = contentW + padL + padR;
-  const totalH = contentH + padT + padB;
+  const totalW = frameW + padL + padR;
+  const totalH = frameH + padT + padB;
   const scale = Math.min(exportScale || 1, 2);
 
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(totalW * scale);
   canvas.height = Math.round(totalH * scale);
   const ctx = canvas.getContext("2d")!;
-
-  // Scale so all coords are in pixel units
   ctx.scale(scale, scale);
 
   // Shadow
@@ -360,8 +422,7 @@ export async function exportToPNG(options: ExportOptions): Promise<void> {
     ctx.shadowOffsetY = options.shadow.y;
     ctx.shadowBlur = options.shadow.blur;
     ctx.shadowColor = options.shadow.color;
-    const sr = Math.min(borderRadius, 20);
-    roundRectPath(ctx, padL, padT, contentW, contentH, sr);
+    rrect(ctx, padL, padT, frameW, frameH, Math.min(borderRadius, 20));
     ctx.fillStyle = "rgba(0,0,0,0.01)";
     ctx.fill();
     ctx.restore();
@@ -370,36 +431,26 @@ export async function exportToPNG(options: ExportOptions): Promise<void> {
   // Background
   if (hasBg) {
     ctx.save();
-    roundRectPath(ctx, 0, 0, totalW, totalH, Math.min(borderRadius, 20));
+    rrect(ctx, 0, 0, totalW, totalH, Math.min(borderRadius, 20));
     ctx.clip();
-    const gradient = createGradient(ctx, totalW, totalH, options.backgroundGradient);
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = makeGradient(ctx, totalW, totalH, options.backgroundGradient);
     ctx.fillRect(0, 0, totalW, totalH);
     drawPattern(ctx, totalW, totalH, options.pattern);
     ctx.restore();
   }
 
-  // Border radius clip for frame-only mode (no bg but has radius)
+  // Border-radius clip for transparent mode
   if (isTransparent && borderRadius > 0) {
     ctx.save();
-    roundRectPath(ctx, padL, padT, contentW, contentH, Math.min(borderRadius, 20));
+    rrect(ctx, padL, padT, frameW, frameH, Math.min(borderRadius, 20));
     ctx.clip();
   }
 
-  // Content
-  if (hasDevice) {
-    drawDeviceFrame(ctx, options.device, img, options.objectFit, padL, padT);
-  } else {
-    if (borderRadius > 0 && !isTransparent) {
-      ctx.save();
-      roundRectPath(ctx, padL, padT, sw, sh, Math.min(borderRadius, 16));
-      ctx.clip();
-      ctx.drawImage(img, padL, padT, sw, sh);
-      ctx.restore();
-    } else {
-      ctx.drawImage(img, padL, padT, sw, sh);
-    }
-  }
+  // Draw content
+  ctx.save();
+  ctx.translate(padL, padT);
+  drawDeviceFrame(ctx, device, img, options.objectFit);
+  ctx.restore();
 
   if (isTransparent && borderRadius > 0) {
     ctx.restore();
