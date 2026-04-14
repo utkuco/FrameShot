@@ -25,6 +25,7 @@ export type ObjectFitType = "contain" | "cover" | "fill";
 export interface GradientConfig {
   colors: string[];
   direction: GradientDirection;
+  transparent?: boolean;
 }
 
 export interface PatternConfig {

@@ -21,9 +21,10 @@ export const Canvas = memo(function Canvas() {
   const dragStart = useRef({ x: 0, y: 0, ox: 0, oy: 0 });
 
   const displayUrl = croppedImageUrl || imageUrl;
-  const gradientCSS = buildGradientCSS(backgroundGradient);
-  const patternCSS = getPatternCSS(pattern.type, pattern.color, pattern.scale, pattern.opacity);
-  const shadowCSS = shadow.enabled
+  const isTransparent = backgroundGradient.transparent === true;
+  const gradientCSS = isTransparent ? "none" : buildGradientCSS(backgroundGradient);
+  const patternCSS = isTransparent ? "" : getPatternCSS(pattern.type, pattern.color, pattern.scale, pattern.opacity);
+  const shadowCSS = shadow.enabled && !isTransparent
     ? `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${shadow.color}`
     : "none";
   const clampedRotateX = Math.max(-30, Math.min(30, transform3d.rotateX));
@@ -65,8 +66,10 @@ export const Canvas = memo(function Canvas() {
           boxShadow: shadowCSS,
           transform: `translate(${offset.x}px, ${offset.y}px) ${transformCSS}`,
           transition: isDragging ? "none" : "transform 0.3s ease",
-          background: gradientCSS,
-          backgroundImage: patternCSS ? `${patternCSS}, ${gradientCSS}` : gradientCSS,
+          background: isTransparent
+            ? "repeating-conic-gradient(#e4e4e7 0% 25%, #ffffff 0% 50%) 0 0 / 16px 16px"
+            : gradientCSS,
+          backgroundImage: isTransparent ? undefined : (patternCSS ? `${patternCSS}, ${gradientCSS}` : gradientCSS),
         }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

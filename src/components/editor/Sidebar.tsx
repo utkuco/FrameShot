@@ -156,6 +156,7 @@ function FitSection() {
 function GradientSection() {
   const gradient = useEditorStore((s) => s.backgroundGradient);
   const setGradient = useEditorStore((s) => s.setGradient);
+  const isTransparent = gradient.transparent === true;
   const directions = [
     { label: "→", value: "to-right" },
     { label: "↓", value: "to-bottom" },
@@ -166,65 +167,88 @@ function GradientSection() {
 
   return (
     <div className="space-y-3">
-      <div>
-        <Label className="text-xs text-muted-foreground mb-2 block">Gradient Direction</Label>
-        <div className="flex gap-1">
-          {directions.map((d) => (
-            <button
-              key={d.value}
-              onClick={() => setGradient({ ...gradient, direction: d.value as any })}
-              className={cn(
-                "flex-1 py-1.5 text-xs rounded-md border transition-all",
-                gradient.direction === d.value
-                  ? "border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1] font-medium"
-                  : "border-[#e4e4e7] hover:border-[#6366f1]/50 text-[#71717a]"
-              )}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
+      {/* Transparent toggle */}
+      <div className="flex items-center justify-between">
+        <Label className="text-xs text-muted-foreground">Transparent Background</Label>
+        <button
+          onClick={() => setGradient({ ...gradient, transparent: !isTransparent })}
+          className={cn(
+            "relative w-9 h-5 rounded-full transition-colors",
+            isTransparent ? "bg-[#6366f1]" : "bg-[#e4e4e7]"
+          )}
+        >
+          <div
+            className={cn(
+              "absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform",
+              isTransparent ? "translate-x-4" : "translate-x-0.5"
+            )}
+          />
+        </button>
       </div>
-      <div>
-        <Label className="text-xs text-muted-foreground mb-2 block">Preset Gradients</Label>
-        <div className="grid grid-cols-6 gap-1.5">
-          {presetGradients.map((g, i) => {
-            const css = `linear-gradient(${g.direction === 'to-br' ? '135deg' : g.direction === 'to-right' ? '90deg' : '180deg'}, ${g.colors.join(', ')})`;
-            const isSelected = gradient.colors.join() === g.colors.join();
-            return (
-              <button
-                key={i}
-                onClick={() => setGradient(g)}
-                className={cn(
-                  "w-full aspect-square rounded-lg border-2 transition-all hover:scale-105",
-                  isSelected ? "border-[#6366f1] ring-2 ring-[#6366f1]/30 scale-105" : "border-transparent hover:border-[#e4e4e7]"
-                )}
-                style={{ background: css }}
+
+      {!isTransparent && (
+        <>
+          <div>
+            <Label className="text-xs text-muted-foreground mb-2 block">Gradient Direction</Label>
+            <div className="flex gap-1">
+              {directions.map((d) => (
+                <button
+                  key={d.value}
+                  onClick={() => setGradient({ ...gradient, direction: d.value as any })}
+                  className={cn(
+                    "flex-1 py-1.5 text-xs rounded-md border transition-all",
+                    gradient.direction === d.value
+                      ? "border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1] font-medium"
+                      : "border-[#e4e4e7] hover:border-[#6366f1]/50 text-[#71717a]"
+                  )}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs text-muted-foreground mb-2 block">Preset Gradients</Label>
+            <div className="grid grid-cols-6 gap-1.5">
+              {presetGradients.map((g, i) => {
+                const css = `linear-gradient(${g.direction === 'to-br' ? '135deg' : g.direction === 'to-right' ? '90deg' : '180deg'}, ${g.colors.join(', ')})`;
+                const isSelected = !gradient.transparent && gradient.colors.join() === g.colors.join();
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setGradient(g)}
+                    className={cn(
+                      "w-full aspect-square rounded-lg border-2 transition-all hover:scale-105",
+                      isSelected ? "border-[#6366f1] ring-2 ring-[#6366f1]/30 scale-105" : "border-transparent hover:border-[#e4e4e7]"
+                    )}
+                    style={{ background: css }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <Label className="text-[10px] text-muted-foreground mb-1 block">Color 1</Label>
+              <input
+                type="color"
+                value={gradient.colors[0]}
+                onChange={(e) => setGradient({ ...gradient, colors: [e.target.value, ...gradient.colors.slice(1)] })}
+                className="w-full h-8 rounded-lg border border-[#e4e4e7] cursor-pointer bg-white"
               />
-            );
-          })}
-        </div>
-      </div>
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <Label className="text-[10px] text-muted-foreground mb-1 block">Color 1</Label>
-          <input
-            type="color"
-            value={gradient.colors[0]}
-            onChange={(e) => setGradient({ ...gradient, colors: [e.target.value, ...gradient.colors.slice(1)] })}
-            className="w-full h-8 rounded-lg border border-[#e4e4e7] cursor-pointer bg-white"
-          />
-        </div>
-        <div className="flex-1">
-          <Label className="text-[10px] text-muted-foreground mb-1 block">Color 2</Label>
-          <input
-            type="color"
-            value={gradient.colors[1]}
-            onChange={(e) => setGradient({ ...gradient, colors: [gradient.colors[0], e.target.value] })}
-            className="w-full h-8 rounded-lg border border-[#e4e4e7] cursor-pointer bg-white"
-          />
-        </div>
-      </div>
+            </div>
+            <div className="flex-1">
+              <Label className="text-[10px] text-muted-foreground mb-1 block">Color 2</Label>
+              <input
+                type="color"
+                value={gradient.colors[1]}
+                onChange={(e) => setGradient({ ...gradient, colors: [gradient.colors[0], e.target.value] })}
+                className="w-full h-8 rounded-lg border border-[#e4e4e7] cursor-pointer bg-white"
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

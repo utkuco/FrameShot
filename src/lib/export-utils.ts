@@ -364,8 +364,9 @@ export async function exportToPNG(options: ExportOptions): Promise<void> {
   const img = await loadImage(imageUrl);
 
   const hasDevice = device !== "none";
-  const hasBg = exportMode === "full";
-  const isTransparent = exportMode === "transparent";
+  const isBgTransparent = options.backgroundGradient.transparent === true;
+  const hasBg = exportMode === "full" && !isBgTransparent;
+  const isTransparent = exportMode === "transparent" || (exportMode === "full" && isBgTransparent);
 
   // Screen pixel size (target 400px height)
   const TARGET_SH = 400;
