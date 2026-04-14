@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { MockupCard } from "@/components/editor/MockupCard";
 
 export const metadata: Metadata = {
   title: "FrameShot — Free Screenshot Beautifier & Mockup Generator",
@@ -25,15 +26,15 @@ export default function Home() {
             </span>
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-[#71717a]">
-            <a href="#examples" className="hover:text-[#18181b] transition-colors">Örnekler</a>
-            <a href="#features" className="hover:text-[#18181b] transition-colors">Özellikler</a>
-            <a href="#faq" className="hover:text-[#18181b] transition-colors">SSS</a>
+            <a href="#examples" className="hover:text-[#18181b] transition-colors">Examples</a>
+            <a href="#features" className="hover:text-[#18181b] transition-colors">Features</a>
+            <a href="#faq" className="hover:text-[#18181b] transition-colors">FAQ</a>
           </nav>
           <Link
             href="/editor"
             className="px-4 sm:px-5 py-2 rounded-lg bg-[#6366f1] hover:bg-[#818cf8] text-white font-medium text-sm transition-colors"
           >
-            Editörü Aç
+            Open Editor
           </Link>
         </div>
       </header>
@@ -43,80 +44,80 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#e4e4e7] bg-[#f4f4f5] text-[10px] sm:text-xs font-medium text-[#71717a] mb-6 sm:mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            100% Ücretsiz · Kayıt Gerekmez · Tarayıcı Tabanlı
+            100% Free · No Signup · Browser-Based
           </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] mb-4 sm:mb-6">
-            Ekran Görüntülerini
+            Beautify Your Screenshots
             <br />
             <span className="bg-gradient-to-r from-[#6366f1] via-[#8b5cf6] to-[#a78bfa] bg-clip-text text-transparent">
-              Güzelleştir
+              in Seconds
             </span>
           </h1>
           <p className="text-sm sm:text-lg text-[#71717a] max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2">
-            Cihaz mockup&apos;ları, gradient arka planlar, gölgeler ve 3D efektler ekle. Sosyal medya, sunumlar ve bloglar için mükemmel.
+            Add device mockups, gradient backgrounds, shadows, and 3D effects to your screenshots. Perfect for social media, presentations, and blogs.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link
               href="/editor"
               className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-[#6366f1] hover:bg-[#818cf8] text-white font-semibold transition-colors text-sm sm:text-base shadow-lg shadow-[#6366f1]/25"
             >
-              Başla →
+              Start Beautifying →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Showcase — Example Mockups */}
+      {/* Showcase */}
       <section className="py-12 sm:py-20 px-4 sm:px-6" id="examples">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Neler Yapabilirsin?</h2>
-            <p className="text-sm sm:text-base text-[#71717a]">Farklı cihaz frame&apos;leri ve arka planlarla örnek sonuçlar</p>
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Made with FrameShot</h2>
+            <p className="text-sm sm:text-base text-[#71717a]">Real results from real screenshots</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Example 1: iPhone */}
             <MockupCard
               gradient="linear-gradient(135deg, #667eea, #764ba2)"
-              title="iPhone Mockup"
-              desc="Mor gradient ile telefon frame"
+              title="Mobile App"
+              desc="iPhone frame · Purple gradient"
               device="phone"
+              imgSrc="/examples/app-mockup.png"
             />
-            {/* Example 2: MacBook */}
             <MockupCard
               gradient="linear-gradient(135deg, #4facfe, #00f2fe)"
-              title="MacBook Mockup"
-              desc="Mavi gradient ile laptop frame"
-              device="laptop"
-            />
-            {/* Example 3: Browser Chrome */}
-            <MockupCard
-              gradient="linear-gradient(135deg, #43e97b, #38f9d7)"
-              title="Chrome Frame"
-              desc="Yeşil gradient ile tarayıcı"
+              title="Web App"
+              desc="Browser frame · Blue gradient"
               device="browser"
+              imgSrc="/examples/web-mockup.jpg"
             />
-            {/* Example 4: No device */}
             <MockupCard
-              gradient="linear-gradient(135deg, #fa709a, #fee140)"
-              title="Sadece Gradient"
-              desc="Cihaz frame olmadan"
-              device="none"
-            />
-            {/* Example 5: iPad */}
-            <MockupCard
-              gradient="linear-gradient(135deg, #a18cd1, #fbc2eb)"
-              title="iPad Mockup"
-              desc="Pastel gradient ile tablet"
-              device="tablet"
-            />
-            {/* Example 6: Shadow */}
-            <MockupCard
-              gradient="linear-gradient(135deg, #0c0c0c, #434343)"
-              title="Koyu Tema"
-              desc="Koyu gradient + gölge efekti"
+              gradient="linear-gradient(135deg, #1a1a2e, #16213e)"
+              title="Shadow Effect"
+              desc="No device · Dark gradient · Drop shadow"
               device="none"
               dark
+              imgSrc="/examples/web-mockup.jpg"
+            />
+            <MockupCard
+              gradient="linear-gradient(135deg, #fa709a, #fee140)"
+              title="Tablet"
+              desc="iPad frame · Coral gradient"
+              device="tablet"
+              imgSrc="/examples/mobile-mockup.jpg"
+            />
+            <MockupCard
+              gradient="linear-gradient(135deg, #a18cd1, #fbc2eb)"
+              title="Gradient Background"
+              desc="No device · Pastel gradient"
+              device="none"
+              imgSrc="/examples/app-mockup.png"
+            />
+            <MockupCard
+              gradient="linear-gradient(135deg, #43e97b, #38f9d7)"
+              title="3D Transform"
+              desc="No device · Green gradient · 3D rotation"
+              device="none"
+              imgSrc="/examples/mobile-mockup.jpg"
             />
           </div>
         </div>
@@ -126,14 +127,14 @@ export default function Home() {
       <section className="py-12 sm:py-20 px-4 sm:px-6" id="how-it-works">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Nasıl Çalışır?</h2>
-            <p className="text-sm sm:text-base text-[#71717a]">Üç basit adımda herhangi bir ekran görüntüsünü dönüştür.</p>
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">How It Works</h2>
+            <p className="text-sm sm:text-base text-[#71717a]">Three simple steps to transform any screenshot.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { step: "01", title: "Yükle", desc: "Sürükle & bırak, tıkla veya panodan yapıştır. PNG, JPG, WebP desteklenir.", icon: "📸" },
-              { step: "02", title: "Özelleştir", desc: "Gradient, cihaz frame, gölge, padding ve 3D efekt seç. Kırpma aracıyla düzenle.", icon: "🎨" },
-              { step: "03", title: "İndir", desc: "Yüksek çözünürlüklü 2x PNG olarak dışa aktar. Sosyal medyaya hazır.", icon: "✨" },
+              { step: "01", title: "Upload", desc: "Drag & drop, click, or paste from clipboard. PNG, JPG, WebP supported.", icon: "📸" },
+              { step: "02", title: "Customize", desc: "Pick gradients, device frames, shadows, padding, and 3D transforms. Crop to refine.", icon: "🎨" },
+              { step: "03", title: "Export", desc: "Download as high-res 2x PNG. Ready for social media, docs, or presentations.", icon: "✨" },
             ].map((item) => (
               <div
                 key={item.step}
@@ -153,20 +154,20 @@ export default function Home() {
       <section className="py-12 sm:py-20 px-4 sm:px-6 bg-[#fafafa]" id="features">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Özellikler</h2>
-            <p className="text-sm sm:text-base text-[#71717a]">İhtiyacınız olan her şey, fazlası değil.</p>
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Features</h2>
+            <p className="text-sm sm:text-base text-[#71717a]">Everything you need, nothing you don&apos;t.</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {[
-              { title: "Cihaz Mockup", desc: "iPhone 15, Pixel 8, iPad, MacBook, Chrome, Safari, Firefox frame'leri.", tag: "Mockup" },
-              { title: "Gradientler", desc: "12 hazır preset + özel renkler. Doğrusal, radyal, çapraz.", tag: "Arka Plan" },
-              { title: "Görsel Kırpma", desc: "Yükleip sonra kırp. Serbest veya sabit oranlarla.", tag: "Düzenleme" },
-              { title: "Sığdırma", desc: "Contain, cover veya fill — frame'de nasıl görüneceğini seç.", tag: "Düzenleme" },
-              { title: "Desenler", desc: "Nokta, ızgara, çapraz desenler ayarlanabilir opaklıkla.", tag: "Arka Plan" },
-              { title: "Gölgeler", desc: "X/Y kayma, blur ve renk kontrolü.", tag: "Efekt" },
-              { title: "3D Dönüşüm", desc: "Perspektif rotasyonu ayarlanabilir ölçek ile.", tag: "Efekt" },
-              { title: "Yüksek Çözünürlük", desc: "2x PNG dışa aktarım, Retina ekranlarda net.", tag: "Dışa Aktar" },
-              { title: "Gizlilik", desc: "Tüm işlemler tarayıcıda. Hiçbir şey sunucuya gitmez.", tag: "Güvenlik" },
+              { title: "Device Mockups", desc: "iPhone 15, Pixel 8, iPad, MacBook, Chrome, Safari, Firefox frames.", tag: "Mockups" },
+              { title: "Gradients", desc: "12 presets + custom colors. Linear, radial, diagonal directions.", tag: "Backgrounds" },
+              { title: "Image Crop", desc: "Crop before beautifying. Free aspect or fixed ratios like 1:1, 16:9.", tag: "Editing" },
+              { title: "Fit & Position", desc: "Contain, cover, or fill — control how the image fits in the frame.", tag: "Editing" },
+              { title: "Patterns", desc: "Dots, grid, diagonal patterns with adjustable opacity.", tag: "Backgrounds" },
+              { title: "Drop Shadows", desc: "Full control: X/Y offset, blur, spread, color.", tag: "Effects" },
+              { title: "3D Transforms", desc: "Perspective rotation with adjustable scale.", tag: "Effects" },
+              { title: "High-Res Export", desc: "2x PNG export, crisp on Retina displays.", tag: "Export" },
+              { title: "Privacy First", desc: "All processing in-browser. Nothing leaves your device.", tag: "Privacy" },
             ].map((f) => (
               <div
                 key={f.title}
@@ -187,16 +188,16 @@ export default function Home() {
       <section className="py-12 sm:py-20 px-4 sm:px-6" id="faq">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-10 sm:mb-14">
-            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Sıkça Sorulan Sorular</h2>
+            <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-3">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-2.5 sm:space-y-3">
             {[
-              { q: "FrameShot ücretsiz mi?", a: "Evet, %100 ücretsiz. Premium katman yok, kullanım limiti yok, gizli maliyet yok." },
-              { q: "Hesap gerekiyor mu?", a: "Hayır. Editörü açın ve başlayın." },
-              { q: "Ekran görüntülerim yükleniyor mu?", a: "Hayır. Her şey tarayıcınızda yerel olarak gerçekleşir. Canvas API kullanılır." },
-              { q: "Hangi formatlar destekleniyor?", a: "PNG, JPG, WebP yükleyebilir veya panodan yapıştırabilirsiniz. 2x PNG olarak dışa aktarılır." },
-              { q: "Ticari olarak kullanabilir miyim?", a: "Kesinlikle. Kişisel ve ticari kullanım için ücretsizdir." },
-              { q: "Mobilde çalışır mı?", a: "Masaüstünde en iyi deneyim. Mobil desteği sınırlı ama temel işlevler çalışıyor." },
+              { q: "Is FrameShot free?", a: "Yes, 100% free. No premium tiers, no usage limits, no hidden costs." },
+              { q: "Do I need an account?", a: "No signup required. Just open the editor and start." },
+              { q: "Are my screenshots uploaded?", a: "No. Everything happens locally in your browser using Canvas API." },
+              { q: "What formats are supported?", a: "Upload PNG, JPG, WebP or paste from clipboard. Export as 2x PNG." },
+              { q: "Can I use it commercially?", a: "Absolutely. Free for personal and commercial use." },
+              { q: "Does it work on mobile?", a: "Best on desktop. Mobile support is limited but basic functions work." },
             ].map((faq) => (
               <details
                 key={faq.q}
@@ -221,16 +222,16 @@ export default function Home() {
       <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-[#e4e4e7]">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-4">
-            Güzelleştirmeye Hazır mısın?
+            Ready to Beautify?
           </h2>
           <p className="text-sm sm:text-base text-[#71717a] mb-6 sm:mb-8">
-            Ücretsiz, hızlı ve gizli. Kayıt gerekmez.
+            Free, fast, and private. No signup needed.
           </p>
           <Link
             href="/editor"
             className="inline-flex px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl bg-[#6366f1] hover:bg-[#818cf8] text-white font-semibold transition-colors text-sm sm:text-base shadow-lg shadow-[#6366f1]/25"
           >
-            Editörü Aç →
+            Open FrameShot Editor →
           </Link>
         </div>
       </section>
@@ -249,95 +250,15 @@ export default function Home() {
             </span>
           </div>
           <nav className="flex items-center gap-5 sm:gap-6 text-[10px] sm:text-xs text-[#71717a]">
-            <a href="/editor" className="hover:text-[#18181b]">Editör</a>
-            <a href="#features" className="hover:text-[#18181b]">Özellikler</a>
-            <a href="#faq" className="hover:text-[#18181b]">SSS</a>
+            <a href="/editor" className="hover:text-[#18181b]">Editor</a>
+            <a href="#features" className="hover:text-[#18181b]">Features</a>
+            <a href="#faq" className="hover:text-[#18181b]">FAQ</a>
           </nav>
           <p className="text-[10px] sm:text-xs text-[#71717a]">
             © {new Date().getFullYear()} FrameShot
           </p>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function MockupCard({ gradient, title, desc, device, dark }: {
-  gradient: string;
-  title: string;
-  desc: string;
-  device: "phone" | "laptop" | "browser" | "tablet" | "none";
-  dark?: boolean;
-}) {
-  const textColor = dark ? "text-white" : "text-[#3f3f46]";
-  const mutedText = dark ? "text-white/60" : "text-[#a1a1aa]";
-
-  return (
-    <div className="group rounded-2xl border border-[#e4e4e7] overflow-hidden hover:shadow-xl hover:shadow-[#6366f1]/10 hover:border-[#6366f1]/30 transition-all">
-      {/* Preview */}
-      <div
-        className="aspect-[4/3] flex items-center justify-center p-6 relative overflow-hidden"
-        style={{ background: gradient }}
-      >
-        <div className="relative">
-          {device === "phone" && (
-            <div className={`w-20 h-36 sm:w-24 sm:h-44 rounded-2xl border-2 ${dark ? "border-white/30" : "border-white/50"} bg-white/10 backdrop-blur-sm overflow-hidden`}>
-              <div className={`h-5 ${dark ? "bg-white/10" : "bg-white/20"} flex items-center justify-center`}>
-                <div className="w-8 h-3 rounded-full bg-white/20" />
-              </div>
-              <div className="flex-1 flex items-center justify-center p-2">
-                <div className={`w-full h-full rounded ${dark ? "bg-white/20" : "bg-white/30"}`} />
-              </div>
-              <div className="h-2 flex items-center justify-center">
-                <div className="w-4 h-0.5 rounded-full bg-white/30" />
-              </div>
-            </div>
-          )}
-          {device === "laptop" && (
-            <div className="w-36 sm:w-44">
-              <div className={`rounded-t-lg border-2 border-b-0 ${dark ? "border-white/30" : "border-white/50"} bg-white/10 backdrop-blur-sm p-1`}>
-                <div className={`h-3 ${dark ? "bg-white/10" : "bg-white/20"} rounded-sm flex items-center px-1 gap-0.5`}>
-                  <div className="w-1 h-1 rounded-full bg-red-400/60" />
-                  <div className="w-1 h-1 rounded-full bg-yellow-400/60" />
-                  <div className="w-1 h-1 rounded-full bg-green-400/60" />
-                </div>
-                <div className={`aspect-[16/10] rounded ${dark ? "bg-white/20" : "bg-white/30"} mt-1`} />
-              </div>
-              <div className={`h-1.5 ${dark ? "bg-white/20" : "bg-white/40"} rounded-b-lg mx-2`} />
-            </div>
-          )}
-          {device === "browser" && (
-            <div className={`w-36 sm:w-44 rounded-lg border-2 ${dark ? "border-white/30" : "border-white/50"} bg-white/10 backdrop-blur-sm overflow-hidden`}>
-              <div className={`h-4 ${dark ? "bg-white/10" : "bg-white/20"} flex items-center px-2 gap-1`}>
-                <div className="w-1.5 h-1.5 rounded-full bg-red-400/60" />
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-400/60" />
-                <div className="w-1.5 h-1.5 rounded-full bg-green-400/60" />
-                <div className={`flex-1 h-1.5 rounded-full ${dark ? "bg-white/10" : "bg-white/20"} mx-2`} />
-              </div>
-              <div className={`aspect-[16/10] ${dark ? "bg-white/20" : "bg-white/30"}`} />
-            </div>
-          )}
-          {device === "tablet" && (
-            <div className={`w-28 h-36 sm:w-32 sm:h-40 rounded-xl border-2 ${dark ? "border-white/30" : "border-white/50"} bg-white/10 backdrop-blur-sm overflow-hidden`}>
-              <div className="flex-1 flex items-center justify-center p-2">
-                <div className={`w-full h-full rounded ${dark ? "bg-white/20" : "bg-white/30"}`} />
-              </div>
-              <div className="h-3 flex items-center justify-center">
-                <div className="w-4 h-4 rounded-full border border-white/30" />
-              </div>
-            </div>
-          )}
-          {device === "none" && (
-            <div className={`w-28 h-20 sm:w-32 sm:h-24 rounded-xl ${dark ? "bg-white/15" : "bg-white/25"} backdrop-blur-sm shadow-lg`} />
-          )}
-        </div>
-      </div>
-
-      {/* Info */}
-      <div className="p-4 bg-white">
-        <h3 className="text-sm font-bold text-[#18181b] mb-0.5">{title}</h3>
-        <p className="text-xs text-[#a1a1aa]">{desc}</p>
-      </div>
     </div>
   );
 }

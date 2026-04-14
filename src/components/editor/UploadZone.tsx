@@ -95,10 +95,10 @@ export function UploadZone() {
         {/* Text */}
         <div className="text-center space-y-1">
           <p className="text-sm font-medium text-[#18181b]">
-            {isDragging ? "Bırakın!" : "Sürükle & Bırak"}
+            {isDragging ? "Drop!" : "Drag & Drop"}
           </p>
           <p className="text-xs text-[#71717a]">
-            veya <span className="text-[#6366f1] font-medium">tıklayarak seç</span>
+            or <span className="text-[#6366f1] font-medium">click to browse</span>
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export function UploadZone() {
 
         {/* Paste hint */}
         <p className="text-[11px] text-[#a1a1aa]">
-          Ctrl+V ile yapıştır
+          Ctrl+V to paste
         </p>
       </div>
 
@@ -122,7 +122,7 @@ export function UploadZone() {
         className="flex items-center gap-2 px-5 py-2.5 bg-[#6366f1] hover:bg-[#818cf8] text-white rounded-xl text-sm font-medium transition-colors shadow-sm"
       >
         <ImagePlus className="w-4 h-4" />
-        Görsel Yükle
+        Upload Image
       </button>
 
       <input

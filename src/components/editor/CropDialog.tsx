@@ -55,11 +55,11 @@ export function CropDialog() {
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-[#e4e4e7]">
         <div className="flex items-center gap-3">
-          <h3 className="text-sm font-semibold text-[#18181b]">Görseli Kırp</h3>
+          <h3 className="text-sm font-semibold text-[#18181b]">Crop Image</h3>
           <div className="flex items-center gap-1">
-            <span className="text-xs text-[#71717a]">En/Boy:</span>
+            <span className="text-xs text-[#71717a]">Aspect:</span>
             {[
-              { label: "Serbest", value: undefined },
+              { label: "Free", value: undefined },
               { label: "1:1", value: 1 },
               { label: "16:9", value: 16 / 9 },
               { label: "9:16", value: 9 / 16 },
@@ -82,15 +82,15 @@ export function CropDialog() {
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleReset} className="gap-1">
             <RotateCcw className="w-3.5 h-3.5" />
-            Sıfırla
+            Reset
           </Button>
           <Button variant="outline" size="sm" onClick={handleCancel} className="gap-1">
             <X className="w-3.5 h-3.5" />
-            İptal
+            Cancel
           </Button>
           <Button size="sm" onClick={handleApply} className="gap-1 bg-[#6366f1] hover:bg-[#818cf8]">
             <Check className="w-3.5 h-3.5" />
-            Uygula
+            Apply
           </Button>
         </div>
       </div>
@@ -110,7 +110,7 @@ export function CropDialog() {
 
       {/* Zoom slider */}
       <div className="flex items-center gap-3 px-6 py-3 bg-white border-t border-[#e4e4e7]">
-        <span className="text-xs text-[#71717a]">Yakınlaştır</span>
+        <span className="text-xs text-[#71717a]">Zoom</span>
         <input
           type="range"
           min={1}

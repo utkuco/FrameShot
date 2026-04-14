@@ -15,7 +15,7 @@ export function Sidebar() {
   return (
     <div className="flex flex-col h-full text-sm">
       <div className="px-5 py-4 border-b border-border">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ayarlar</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settings</h2>
       </div>
       <div className="flex-1 overflow-y-auto">
         <Accordion type="multiple" defaultValue={["background", "fit", "device", "padding", "shadow", "transform"]} className="w-full">
@@ -23,7 +23,7 @@ export function Sidebar() {
             <AccordionTrigger className="px-5 hover:no-underline">
               <span className="flex items-center gap-2.5 text-sm font-medium">
                 <Palette className="w-4 h-4 text-primary" />
-                Arka Plan
+                Background
               </span>
             </AccordionTrigger>
             <AccordionContent>
@@ -38,7 +38,7 @@ export function Sidebar() {
             <AccordionTrigger className="px-5 hover:no-underline">
               <span className="flex items-center gap-2.5 text-sm font-medium">
                 <Maximize className="w-4 h-4 text-primary" />
-                Sığdırma
+                Fit & Size
               </span>
             </AccordionTrigger>
             <AccordionContent>
@@ -81,7 +81,7 @@ export function Sidebar() {
             <AccordionTrigger className="px-5 hover:no-underline">
               <span className="flex items-center gap-2.5 text-sm font-medium">
                 <Box className="w-4 h-4 text-primary" />
-                Gölge
+                Shadow
               </span>
             </AccordionTrigger>
             <AccordionContent>
@@ -115,9 +115,9 @@ function FitSection() {
   const setObjectFit = useEditorStore((s) => s.setObjectFit);
 
   const fitOptions: { key: ObjectFitType; label: string; desc: string }[] = [
-    { key: "contain", label: "Sığdır", desc: "Tüm görsel görünür, boşluk kalabilir" },
-    { key: "cover", label: "Kapla", desc: "Alanı doldurur, kenarlar kesilebilir" },
-    { key: "fill", label: "Uzat", desc: "Görseli çerçeveye zorlar" },
+    { key: "contain", label: "Contain", desc: "Full image visible, may have empty space" },
+    { key: "cover", label: "Cover", desc: "Fills the area, edges may crop" },
+    { key: "fill", label: "Fill", desc: "Stretches to fill frame" },
   ];
 
   return (
@@ -167,7 +167,7 @@ function GradientSection() {
   return (
     <div className="space-y-3">
       <div>
-        <Label className="text-xs text-muted-foreground mb-2 block">Gradient Yönü</Label>
+        <Label className="text-xs text-muted-foreground mb-2 block">Gradient Direction</Label>
         <div className="flex gap-1">
           {directions.map((d) => (
             <button
@@ -186,7 +186,7 @@ function GradientSection() {
         </div>
       </div>
       <div>
-        <Label className="text-xs text-muted-foreground mb-2 block">Hazır Gradientler</Label>
+        <Label className="text-xs text-muted-foreground mb-2 block">Preset Gradients</Label>
         <div className="grid grid-cols-6 gap-1.5">
           {presetGradients.map((g, i) => {
             const css = `linear-gradient(${g.direction === 'to-br' ? '135deg' : g.direction === 'to-right' ? '90deg' : '180deg'}, ${g.colors.join(', ')})`;
@@ -207,7 +207,7 @@ function GradientSection() {
       </div>
       <div className="flex gap-2">
         <div className="flex-1">
-          <Label className="text-[10px] text-muted-foreground mb-1 block">Renk 1</Label>
+          <Label className="text-[10px] text-muted-foreground mb-1 block">Color 1</Label>
           <input
             type="color"
             value={gradient.colors[0]}
@@ -216,7 +216,7 @@ function GradientSection() {
           />
         </div>
         <div className="flex-1">
-          <Label className="text-[10px] text-muted-foreground mb-1 block">Renk 2</Label>
+          <Label className="text-[10px] text-muted-foreground mb-1 block">Color 2</Label>
           <input
             type="color"
             value={gradient.colors[1]}
@@ -233,7 +233,7 @@ function PatternSection() {
   const pattern = useEditorStore((s) => s.pattern);
   const setPattern = useEditorStore((s) => s.setPattern);
   const patterns = [
-    { key: "none", label: "Yok", icon: "—" },
+    { key: "none", label: "None", icon: "—" },
     { key: "dots", label: "Nokta", icon: "●" },
     { key: "grid", label: "Izgara", icon: "▦" },
     { key: "diagonal", label: "Çapraz", icon: "╲" },
@@ -241,7 +241,7 @@ function PatternSection() {
 
   return (
     <div>
-      <Label className="text-xs text-muted-foreground mb-2 block">Desen</Label>
+      <Label className="text-xs text-muted-foreground mb-2 block">Pattern</Label>
       <div className="flex gap-1.5">
         {patterns.map((p) => (
           <button
@@ -313,10 +313,10 @@ function PaddingSection() {
   const setPadding = useEditorStore((s) => s.setPadding);
   const update = (key: keyof PaddingConfig, val: number) => setPadding({ ...padding, [key]: val });
   const dirs: { key: keyof PaddingConfig; label: string }[] = [
-    { key: "top", label: "Üst" },
-    { key: "right", label: "Sağ" },
-    { key: "bottom", label: "Alt" },
-    { key: "left", label: "Sol" },
+    { key: "top", label: "Top" },
+    { key: "right", label: "Right" },
+    { key: "bottom", label: "Bottom" },
+    { key: "left", label: "Left" },
   ];
 
   return (
@@ -350,7 +350,7 @@ function RadiusSection() {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className="text-xs text-[#71717a]">Köşe Yuvarlaklığı</Label>
+        <Label className="text-xs text-[#71717a]">Corner Radius</Label>
         <span className="text-xs font-mono text-[#6366f1]">{borderRadius}px</span>
       </div>
       <Slider
@@ -372,7 +372,7 @@ function ShadowSection() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label className="text-xs text-[#71717a]">Gölge</Label>
+        <Label className="text-xs text-[#71717a]">Shadow</Label>
         <Switch
           checked={shadow.enabled}
           onCheckedChange={(checked) => setShadow({ ...shadow, enabled: checked })}
@@ -441,7 +441,7 @@ function TransformSection() {
         onClick={() => setTransform3D({ rotateX: 0, rotateY: 0, rotateZ: 0, perspective: 1000, scale: 1 })}
         className="w-full text-xs text-[#71717a] hover:text-[#18181b] py-1.5 rounded-md border border-[#e4e4e7] hover:border-[#6366f1]/50 transition-all"
       >
-        Sıfırla
+        Reset
       </button>
     </div>
   );

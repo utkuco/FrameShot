@@ -76,7 +76,7 @@ export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
             className={`gap-1.5 ${croppedImageUrl ? "border-[#6366f1] text-[#6366f1] bg-[#6366f1]/5" : ""}`}
           >
             <Crop className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Kırp</span>
+            <span className="hidden sm:inline">Crop</span>
           </Button>
 
           {/* Undo crop */}
@@ -88,18 +88,18 @@ export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
               className="gap-1.5 text-amber-600 border-amber-200 hover:bg-amber-50"
             >
               <Undo2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Kırpma Geri</span>
+              <span className="hidden sm:inline">Cropma Geri</span>
             </Button>
           )}
 
           <Button variant="outline" size="sm" onClick={() => clearImage()} className="gap-1.5">
             <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Yeni</span>
+            <span className="hidden sm:inline">New</span>
           </Button>
 
           <Button size="sm" onClick={handleExport} className="gap-1.5 bg-[#6366f1] hover:bg-[#818cf8]">
             <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">İndir</span>
+            <span className="hidden sm:inline">Download</span>
           </Button>
 
           <Button
@@ -108,7 +108,7 @@ export function Header({ onToggleSidebar, sidebarOpen }: HeaderProps) {
             onClick={reset}
             className="gap-1.5 text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200 hover:border-red-300"
           >
-            Sıfırla
+            Reset All
           </Button>
         </div>
       )}
