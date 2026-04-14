@@ -22,7 +22,11 @@ export const Canvas = memo(function Canvas() {
   const shadowCSS = shadow.enabled
     ? `${shadow.x}px ${shadow.y}px ${shadow.blur}px ${shadow.spread}px ${shadow.color}`
     : "none";
-  const transformCSS = `perspective(${transform3d.perspective}px) rotateX(${transform3d.rotateX}deg) rotateY(${transform3d.rotateY}deg) scale(${transform3d.scale})`;
+  const clampedRotateX = Math.max(-30, Math.min(30, transform3d.rotateX));
+  const clampedRotateY = Math.max(-30, Math.min(30, transform3d.rotateY));
+  const clampedScale = Math.max(0.5, Math.min(1.5, transform3d.scale));
+  const clampedPerspective = Math.max(300, Math.min(1500, transform3d.perspective));
+  const transformCSS = `perspective(${clampedPerspective}px) rotateX(${clampedRotateX}deg) rotateY(${clampedRotateY}deg) scale(${clampedScale})`;
 
   return (
     <div className="flex items-center justify-center p-4 sm:p-8 w-full h-full">

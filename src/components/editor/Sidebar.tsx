@@ -411,9 +411,9 @@ function TransformSection() {
   const setTransform3D = useEditorStore((s) => s.setTransform3D);
 
   const controls = [
-    { key: "rotateX", label: "Rotate X", min: -45, max: 45, suffix: "°" },
-    { key: "rotateY", label: "Rotate Y", min: -45, max: 45, suffix: "°" },
-    { key: "perspective", label: "Perspective", min: 200, max: 2000, suffix: "px" },
+    { key: "rotateX", label: "Rotate X", min: -30, max: 30, suffix: "°" },
+    { key: "rotateY", label: "Rotate Y", min: -30, max: 30, suffix: "°" },
+    { key: "perspective", label: "Perspective", min: 300, max: 1500, suffix: "px" },
     { key: "scale", label: "Scale", min: 50, max: 150, suffix: "%", divisor: 100 },
   ];
 
